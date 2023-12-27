@@ -37,8 +37,8 @@ class ProductSerializer(serializers.ModelSerializer):
     units_purchased = serializers.SerializerMethodField()
     
     def get_units_purchased(self, obj):
-        units_purchased = self.context.get('request').units_purchased
-        return units_purchased if units_purchased is not None else 0
+        self.units_purchased = 10
+        return self.units_purchased
     
     product_total_price = serializers.SerializerMethodField()
 
@@ -46,7 +46,6 @@ class ProductSerializer(serializers.ModelSerializer):
         return Util.calculate_value_after_discount(
             self.get_final_price(obj),
             self.get_units_purchased(obj),
-            obj.cost_price,
             obj.promotion.discount_amount,
             obj.promotion.percentual_discount,
             obj.promotion.unit_discount,

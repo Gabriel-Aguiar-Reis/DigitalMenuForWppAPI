@@ -12,7 +12,6 @@ class Util:
     def calculate_value_after_discount(
         final_price: Optional[float] = None,
         units_purchased: Optional[int] = None,
-        unit_price: Optional[float] = None,
         discount_amount: Optional[int] = None,
         percentual_discount: Optional[float] = None,
         unit_discount: Optional[int] = None,
@@ -23,7 +22,6 @@ class Util:
         parameters = [
             final_price,
             units_purchased,
-            unit_price,
             discount_amount,
             percentual_discount,
             unit_discount,
@@ -36,7 +34,6 @@ class Util:
         (
             final_price,
             units_purchased,
-            unit_price,
             discount_amount,
             percentual_discount,
             unit_discount,
@@ -49,8 +46,8 @@ class Util:
         if not value:
             result = 'Invalid: There is no value reported.'
         elif (
-            sum(1 for param in valid_params[3:6] if param != 0) != 1
-            or sum(1 for param in valid_params[6:] if param != 0) != 1
+            sum(1 for param in valid_params[2:5] if param != 0) != 1
+            or sum(1 for param in valid_params[5:] if param != 0) != 1
         ):
             result = 'Invalid: Wrong Discount Configuration.'
         else:
@@ -63,7 +60,7 @@ class Util:
                 (
                     discount_amount,
                     unit_for_discount,
-                    value >= (unit_for_discount * discount_amount),
+                    value >= (unit_for_discount * final_price),
                 ),
                 (
                     percentual_discount,
@@ -73,7 +70,7 @@ class Util:
                 (
                     percentual_discount,
                     unit_for_discount,
-                    value >= (unit_for_discount * discount_amount),
+                    value >= (unit_for_discount * final_price),
                 ),
                 (
                     unit_discount,
@@ -83,7 +80,7 @@ class Util:
                 (
                     unit_discount,
                     unit_for_discount,
-                    value >= (unit_for_discount * discount_amount),
+                    value >= (unit_for_discount * final_price),
                 ),
             ]
 
@@ -99,7 +96,7 @@ class Util:
                     elif discount_type == percentual_discount:
                         result = value - (value * percentual_discount)
                     elif discount_type == unit_discount:
-                        result = value - (unit_discount * unit_price)
+                        result = value - (unit_discount * final_price)
                     break
 
         return result

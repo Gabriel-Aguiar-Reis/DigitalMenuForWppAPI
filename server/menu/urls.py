@@ -13,7 +13,6 @@ from .views import (
     ProductList,
     TypeDetail,
     TypeList,
-    update_units_purchased,
 )
 
 schema_view = get_schema_view(
@@ -37,11 +36,6 @@ urlpatterns = [
     path('campaigns/', CampaignList.as_view(), name='CampaignList'),
     path('photos/<uuid:pk>', PhotoDetail.as_view(), name='PhotoDetail'),
     path('photos/', PhotoList.as_view(), name='PhotoList'),
-    path(
-        'products/<uuid:pk>/update_units_purchased/',
-        update_units_purchased,
-        name='update_units_purchased',
-    ),
     path('products/<uuid:pk>', ProductDetail.as_view(), name='ProductDetail'),
     path('products/', ProductList.as_view(), name='ProductList'),
     path('types/<uuid:pk>', TypeDetail.as_view(), name='TypeDetail'),
