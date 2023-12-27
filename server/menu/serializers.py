@@ -14,10 +14,12 @@ class CampaignSerializer(serializers.ModelSerializer):
             raise serializers.validationError('Invalid date or time.')
         return value
 
+
 class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
         fields = '__all__'
+
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,6 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     photos = PhotoSerializer(many=True, read_only=True)
+
 
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:
