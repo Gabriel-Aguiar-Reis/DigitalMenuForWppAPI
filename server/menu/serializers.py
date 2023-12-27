@@ -2,6 +2,7 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from .models import Campaign, Photo, Product, Type
+from .utils import Util
 
 
 class CampaignSerializer(serializers.ModelSerializer):
@@ -27,6 +28,31 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     photos = PhotoSerializer(many=True, read_only=True)
+    final_price = serializers.SerializerMethodField()
+
+    def get_final_price(self, obj):
+        return Util.calculate_product_price(
+            obj.cost_price, obj.percentual_margin, obj.type.percentual_margin
+        )
+    units_purchased = serializers.SerializerMethodField()
+    
+    def get_units_purchased(self, obj):
+        units_purchased = self.context.get('request').units_purchased
+        return units_purchased if units_purchased is not None else 0
+    
+    product_total_price = serializers.SerializerMethodField()
+
+    def get_product_total_price(self, obj): 
+        return Util.calculate_value_after_discount(
+            self.get_final_price(obj),
+            self.get_units_purchased(obj),
+            obj.cost_price,
+            obj.promotion.discount_amount,
+            obj.promotion.percentual_discount,
+            obj.promotion.unit_discount,
+            obj.promotion.amount_for_discount,
+            obj.promotion.unit_for_discount,
+        )
 
 
 class TypeSerializer(serializers.ModelSerializer):

@@ -10,7 +10,8 @@ class Util:
 
     @staticmethod
     def calculate_value_after_discount(
-        value: Optional[float] = None,
+        final_price: Optional[float] = None,
+        units_purchased: Optional[int] = None,
         unit_price: Optional[float] = None,
         discount_amount: Optional[int] = None,
         percentual_discount: Optional[float] = None,
@@ -20,7 +21,8 @@ class Util:
     ) -> None:
 
         parameters = [
-            value,
+            final_price,
+            units_purchased,
             unit_price,
             discount_amount,
             percentual_discount,
@@ -31,8 +33,9 @@ class Util:
 
         valid_params = [Util.__is_valid(param) for param in parameters]
 
-        (   
-            value,
+        (
+            final_price,
+            units_purchased,
             unit_price,
             discount_amount,
             percentual_discount,
@@ -40,12 +43,14 @@ class Util:
             amount_for_discount,
             unit_for_discount,
         ) = valid_params
+        
+        value = final_price * units_purchased
 
         if not value:
             result = 'Invalid: There is no value reported.'
         elif (
-            sum(1 for param in valid_params[2:5] if param != 0) != 1
-            or sum(1 for param in valid_params[5:] if param != 0) != 1
+            sum(1 for param in valid_params[3:6] if param != 0) != 1
+            or sum(1 for param in valid_params[6:] if param != 0) != 1
         ):
             result = 'Invalid: Wrong Discount Configuration.'
         else:

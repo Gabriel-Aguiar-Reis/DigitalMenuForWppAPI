@@ -135,6 +135,19 @@ def test_non_applicable_discount():
         == 'Invalid: Wrong Discount Configuration.'
     )
 
+def test_purchase_value_equals_480():
+    assert (
+        Util.calculate_value_after_discount(
+            value=600,
+            unit_price=60.00,
+            discount_amount=None,
+            percentual_discount=None,
+            unit_discount=2,
+            amount_for_discount=None,
+            unit_for_discount=10,
+        )
+        == 480
+    )
 
 def test_product_price_equals_0():
     assert (

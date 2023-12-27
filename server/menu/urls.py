@@ -13,6 +13,7 @@ from .views import (
     ProductList,
     TypeDetail,
     TypeList,
+    update_units_purchased,
 )
 
 schema_view = get_schema_view(
@@ -30,14 +31,21 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('healthcheck/', HealthCheckView.as_view(), name='HealthCheckView'),
-    path('campaigns/', CampaignDetail.as_view(), name='CampaignDetail'),
-    path('campaigns/<uuid:pk>', CampaignList.as_view(), name='CampaignList'),
-    path('photos/', PhotoDetail.as_view(), name='PhotoDetail'),
-    path('photos/<uuid:pk>', PhotoList.as_view(), name='PhotoList'),
-    path('products/', ProductDetail.as_view(), name='ProductDetail'),
-    path('products/<uuid:pk>', ProductList.as_view(), name='ProductList'),
-    path('types/', TypeDetail.as_view(), name='TypeDetail'),
-    path('types/<uuid:pk>', TypeList.as_view(), name='TypeList'),
+    path(
+        'campaigns/<uuid:pk>', CampaignDetail.as_view(), name='CampaignDetail'
+    ),
+    path('campaigns/', CampaignList.as_view(), name='CampaignList'),
+    path('photos/<uuid:pk>', PhotoDetail.as_view(), name='PhotoDetail'),
+    path('photos/', PhotoList.as_view(), name='PhotoList'),
+    path(
+        'products/<uuid:pk>/update_units_purchased/',
+        update_units_purchased,
+        name='update_units_purchased',
+    ),
+    path('products/<uuid:pk>', ProductDetail.as_view(), name='ProductDetail'),
+    path('products/', ProductList.as_view(), name='ProductList'),
+    path('types/<uuid:pk>', TypeDetail.as_view(), name='TypeDetail'),
+    path('types/', TypeList.as_view(), name='TypeList'),
 ]
 
 urlpatterns += [
