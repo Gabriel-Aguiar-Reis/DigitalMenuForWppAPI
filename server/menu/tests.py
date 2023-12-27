@@ -4,38 +4,38 @@ from menu.utils import Util
 def test_discount_amount_by_amount():
     assert (
         Util.calculate_value_after_discount(
-            value=100,
-            unit_price=None,
+            final_price=20,
+            units_purchased=3,
             discount_amount=10,
             percentual_discount=None,
             unit_discount=None,
             amount_for_discount=60,
             unit_for_discount=None,
         )
-        == 90
+        == 50
     )
 
 
 def test_discount_amount_by_unit():
     assert (
         Util.calculate_value_after_discount(
-            value=120,
-            unit_price=30,
+            final_price=40,
+            units_purchased=4,
             discount_amount=10,
             percentual_discount=None,
             unit_discount=None,
             amount_for_discount=None,
             unit_for_discount=4,
         )
-        == 110
+        == 150
     )
 
 
 def test_percentual_discount_by_amount():
     assert (
         Util.calculate_value_after_discount(
-            value=30,
-            unit_price=None,
+            final_price=1,
+            units_purchased=30,
             discount_amount=None,
             percentual_discount=0.2,
             unit_discount=None,
@@ -49,8 +49,8 @@ def test_percentual_discount_by_amount():
 def test_percentual_discount_by_unit():
     assert (
         Util.calculate_value_after_discount(
-            value=150,
-            unit_price=30,
+            final_price=50,
+            units_purchased=3,
             discount_amount=None,
             percentual_discount=0.1,
             unit_discount=None,
@@ -64,38 +64,38 @@ def test_percentual_discount_by_unit():
 def test_unit_discount_by_amount():
     assert (
         Util.calculate_value_after_discount(
-            value=150,
-            unit_price=40,
+            final_price=5,
+            units_purchased=30,
             discount_amount=None,
             percentual_discount=None,
-            unit_discount=1,
+            unit_discount=5,
             amount_for_discount=20,
             unit_for_discount=None,
         )
-        == 110
+        == 125
     )
 
 
 def test_unit_discount_by_unit():
     assert (
         Util.calculate_value_after_discount(
-            value=50,
-            unit_price=10,
+            final_price=25,
+            units_purchased=3,
             discount_amount=None,
             percentual_discount=None,
             unit_discount=1,
             amount_for_discount=None,
             unit_for_discount=3,
         )
-        == 40
+        == 50
     )
 
 
 def test_no_value_reported():
     assert (
         Util.calculate_value_after_discount(
-            value=None,
-            unit_price=None,
+            final_price=None,
+            units_purchased=None,
             discount_amount=None,
             percentual_discount=None,
             unit_discount=None,
@@ -106,11 +106,11 @@ def test_no_value_reported():
     )
 
 
-def test_wrong_discount_config():
+def test_non_applicable_discount():
     assert (
         Util.calculate_value_after_discount(
-            value=50,
-            unit_price=20,
+            final_price=20,
+            units_purchased=3,
             discount_amount=10,
             percentual_discount=None,
             unit_discount=None,
@@ -121,11 +121,11 @@ def test_wrong_discount_config():
     )
 
 
-def test_non_applicable_discount():
+def test_wrong_discount_config():
     assert (
         Util.calculate_value_after_discount(
-            value=200,
-            unit_price=None,
+            final_price=50,
+            units_purchased=4,
             discount_amount=None,
             percentual_discount=0.1,
             unit_discount=None,
@@ -138,8 +138,8 @@ def test_non_applicable_discount():
 def test_purchase_value_equals_480():
     assert (
         Util.calculate_value_after_discount(
-            value=600,
-            unit_price=60.00,
+            final_price=60,
+            units_purchased=10,
             discount_amount=None,
             percentual_discount=None,
             unit_discount=2,
