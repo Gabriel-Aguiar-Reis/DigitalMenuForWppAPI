@@ -10,6 +10,9 @@ class Product(models.Model):
     promotion = models.ForeignKey('Campaign', on_delete=models.CASCADE, blank=True, null=True)
     percentual_margin = models.DecimalField(max_digits=4, decimal_places=3)
     cost_price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    post_discount_price = models.DecimalField(max_digits=6, decimal_places=2)
+    units_purchased = models.IntegerField(default=0)
     
     def __str__(self):
         return f'<{self.type.name}> {self.name}'

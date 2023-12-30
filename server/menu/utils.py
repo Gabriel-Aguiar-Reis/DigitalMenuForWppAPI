@@ -3,24 +3,29 @@ from typing import Optional
 
 class Util:
     @staticmethod
-    def __is_valid(any_value: Optional[int] | Optional[float]) -> bool:
-        if not (any_value is not None and any_value != 0):
+    def __is_valid(
+        any_value: Optional[int] | Optional[float],
+    ) -> (int | float):
+        if any_value == None:
             any_value = 0
         return any_value
 
     @staticmethod
     def calculate_value_after_discount(
-        final_price: Optional[float] = None,
+        price: Optional[float] = None,
         units_purchased: Optional[int] = None,
         discount_amount: Optional[int] = None,
         percentual_discount: Optional[float] = None,
         unit_discount: Optional[int] = None,
         amount_for_discount: Optional[float] = None,
         unit_for_discount: Optional[int] = None,
-    ) -> None:
+        cost_price: Optional[float] = None,
+        product_percentual_margin: Optional[float] = None,
+        type_percentual_margin: Optional[float] = None,
+    ) -> float:
 
         parameters = [
-            final_price,
+            price,
             units_purchased,
             discount_amount,
             percentual_discount,
@@ -32,7 +37,7 @@ class Util:
         valid_params = [Util.__is_valid(param) for param in parameters]
 
         (
-            final_price,
+            price,
             units_purchased,
             discount_amount,
             percentual_discount,
@@ -40,8 +45,8 @@ class Util:
             amount_for_discount,
             unit_for_discount,
         ) = valid_params
-        
-        value = final_price * units_purchased
+
+        value = price * units_purchased
 
         if not value:
             result = 'Invalid: There is no value reported.'
@@ -60,7 +65,7 @@ class Util:
                 (
                     discount_amount,
                     unit_for_discount,
-                    value >= (unit_for_discount * final_price),
+                    value >= (unit_for_discount * price),
                 ),
                 (
                     percentual_discount,
@@ -70,7 +75,7 @@ class Util:
                 (
                     percentual_discount,
                     unit_for_discount,
-                    value >= (unit_for_discount * final_price),
+                    value >= (unit_for_discount * price),
                 ),
                 (
                     unit_discount,
@@ -80,7 +85,7 @@ class Util:
                 (
                     unit_discount,
                     unit_for_discount,
-                    value >= (unit_for_discount * final_price),
+                    value >= (unit_for_discount * price),
                 ),
             ]
 
@@ -96,7 +101,7 @@ class Util:
                     elif discount_type == percentual_discount:
                         result = value - (value * percentual_discount)
                     elif discount_type == unit_discount:
-                        result = value - (unit_discount * final_price)
+                        result = value - (unit_discount * price)
                     break
 
         return result
@@ -106,7 +111,7 @@ class Util:
         cost_price: Optional[float] = None,
         product_percentual_margin: Optional[float] = None,
         type_percentual_margin: Optional[float] = None,
-    ) -> None:
+    ) -> float:
 
         parameters = [
             cost_price,

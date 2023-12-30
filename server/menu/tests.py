@@ -4,7 +4,7 @@ from menu.utils import Util
 def test_discount_amount_by_amount():
     assert (
         Util.calculate_value_after_discount(
-            final_price=20,
+            price=20,
             units_purchased=3,
             discount_amount=10,
             percentual_discount=None,
@@ -19,7 +19,7 @@ def test_discount_amount_by_amount():
 def test_discount_amount_by_unit():
     assert (
         Util.calculate_value_after_discount(
-            final_price=40,
+            price=40,
             units_purchased=4,
             discount_amount=10,
             percentual_discount=None,
@@ -34,7 +34,7 @@ def test_discount_amount_by_unit():
 def test_percentual_discount_by_amount():
     assert (
         Util.calculate_value_after_discount(
-            final_price=1,
+            price=1,
             units_purchased=30,
             discount_amount=None,
             percentual_discount=0.2,
@@ -49,7 +49,7 @@ def test_percentual_discount_by_amount():
 def test_percentual_discount_by_unit():
     assert (
         Util.calculate_value_after_discount(
-            final_price=50,
+            price=50,
             units_purchased=3,
             discount_amount=None,
             percentual_discount=0.1,
@@ -64,7 +64,7 @@ def test_percentual_discount_by_unit():
 def test_unit_discount_by_amount():
     assert (
         Util.calculate_value_after_discount(
-            final_price=5,
+            price=5,
             units_purchased=30,
             discount_amount=None,
             percentual_discount=None,
@@ -79,7 +79,7 @@ def test_unit_discount_by_amount():
 def test_unit_discount_by_unit():
     assert (
         Util.calculate_value_after_discount(
-            final_price=25,
+            price=25,
             units_purchased=3,
             discount_amount=None,
             percentual_discount=None,
@@ -94,7 +94,7 @@ def test_unit_discount_by_unit():
 def test_no_value_reported():
     assert (
         Util.calculate_value_after_discount(
-            final_price=None,
+            price=None,
             units_purchased=None,
             discount_amount=None,
             percentual_discount=None,
@@ -109,7 +109,7 @@ def test_no_value_reported():
 def test_non_applicable_discount():
     assert (
         Util.calculate_value_after_discount(
-            final_price=20,
+            price=20,
             units_purchased=3,
             discount_amount=10,
             percentual_discount=None,
@@ -124,7 +124,7 @@ def test_non_applicable_discount():
 def test_wrong_discount_config():
     assert (
         Util.calculate_value_after_discount(
-            final_price=50,
+            price=50,
             units_purchased=4,
             discount_amount=None,
             percentual_discount=0.1,
@@ -135,10 +135,11 @@ def test_wrong_discount_config():
         == 'Invalid: Wrong Discount Configuration.'
     )
 
+
 def test_purchase_value_equals_480():
     assert (
         Util.calculate_value_after_discount(
-            final_price=60,
+            price=60,
             units_purchased=10,
             discount_amount=None,
             percentual_discount=None,
@@ -148,6 +149,7 @@ def test_purchase_value_equals_480():
         )
         == 480
     )
+
 
 def test_product_price_equals_0():
     assert (

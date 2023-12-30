@@ -6,13 +6,14 @@ from rest_framework import permissions
 from .views import (
     CampaignDetail,
     CampaignList,
-    HealthCheckView,
+    HealthCheck,
     PhotoDetail,
     PhotoList,
     ProductDetail,
     ProductList,
     TypeDetail,
     TypeList,
+    UpdateCart,
 )
 
 schema_view = get_schema_view(
@@ -29,7 +30,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('healthcheck/', HealthCheckView.as_view(), name='HealthCheckView'),
+    path('healthcheck/', HealthCheck.as_view(), name='HealthCheck'),
     path(
         'campaigns/<uuid:pk>', CampaignDetail.as_view(), name='CampaignDetail'
     ),
@@ -37,6 +38,11 @@ urlpatterns = [
     path('photos/<uuid:pk>', PhotoDetail.as_view(), name='PhotoDetail'),
     path('photos/', PhotoList.as_view(), name='PhotoList'),
     path('products/<uuid:pk>', ProductDetail.as_view(), name='ProductDetail'),
+    path(
+        'products/<uuid:pk>/update/<int:units_purchased>',
+        UpdateCart.as_view(),
+        name='UpdateCart',
+    ),
     path('products/', ProductList.as_view(), name='ProductList'),
     path('types/<uuid:pk>', TypeDetail.as_view(), name='TypeDetail'),
     path('types/', TypeList.as_view(), name='TypeList'),

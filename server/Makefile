@@ -1,7 +1,5 @@
-.PHONY: doc_server format install manage_migrations security server test
+.PHONY: format install manage_migrations security serve serve_doc test
 
-doc_server:
-	@mkdocs serve --dev-addr '127.0.0.1:8001'
 format:
 	@isort .
 	@blue .
@@ -12,7 +10,9 @@ manage_migrations:
 	@py manage.py migrate
 security:
 	@pip-audit
-server:
+serve:
 	@py manage.py runserver 8000
+serve_doc:
+	@mkdocs serve --dev-addr '127.0.0.1:8001'
 test:
 	@pytest -v

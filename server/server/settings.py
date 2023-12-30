@@ -18,7 +18,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
@@ -33,6 +36,9 @@ INSTALLED_APPS = [
     'menu',
     'rest_framework',
     'drf_yasg',
+    'allauth',
+    'allauth.account',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -43,7 +49,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 900
+SESSION_EXPIRE_SECONDS = 900
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_DOMAIN = None
+SESSION_COOKIE_PATH = '/'
 
 ROOT_URLCONF = 'server.urls'
 
