@@ -4,16 +4,19 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 from .views import (
+    AddToCart,
     CampaignDetail,
     CampaignList,
+    ClearCart,
     HealthCheck,
     PhotoDetail,
     PhotoList,
     ProductDetail,
     ProductList,
+    RemoveFromCart,
     TypeDetail,
     TypeList,
-    UpdateCart,
+    ViewCart,
 )
 
 schema_view = get_schema_view(
@@ -32,19 +35,26 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('healthcheck/', HealthCheck.as_view(), name='HealthCheck'),
     path(
-        'campaigns/<uuid:pk>', CampaignDetail.as_view(), name='CampaignDetail'
+        'campaigns/<uuid:pk>/', CampaignDetail.as_view(), name='CampaignDetail'
     ),
     path('campaigns/', CampaignList.as_view(), name='CampaignList'),
-    path('photos/<uuid:pk>', PhotoDetail.as_view(), name='PhotoDetail'),
+    path('cart/clear/', ClearCart.as_view(), name='ClearCart'),
+    path('cart/view/', ViewCart.as_view(), name='ViewCart'),
+    path('photos/<uuid:pk>/', PhotoDetail.as_view(), name='PhotoDetail'),
     path('photos/', PhotoList.as_view(), name='PhotoList'),
-    path('products/<uuid:pk>', ProductDetail.as_view(), name='ProductDetail'),
+    path('products/<uuid:pk>/', ProductDetail.as_view(), name='ProductDetail'),
     path(
-        'products/<uuid:pk>/update/<int:units_purchased>',
-        UpdateCart.as_view(),
-        name='UpdateCart',
+        'products/<uuid:pk>/add/<int:units>/',
+        AddToCart.as_view(),
+        name='AddToCart',
+    ),
+    path(
+        'products/<uuid:pk>/remove/<int:units>/',
+        RemoveFromCart.as_view(),
+        name='RemoveFromCart',
     ),
     path('products/', ProductList.as_view(), name='ProductList'),
-    path('types/<uuid:pk>', TypeDetail.as_view(), name='TypeDetail'),
+    path('types/<uuid:pk>/', TypeDetail.as_view(), name='TypeDetail'),
     path('types/', TypeList.as_view(), name='TypeList'),
 ]
 

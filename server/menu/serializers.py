@@ -27,7 +27,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
-    units_purchased = serializers.IntegerField(required=False, default=0)
+    units = serializers.IntegerField(required=False, default=0)
     photos = PhotoSerializer(many=True, read_only=True)
     price = serializers.SerializerMethodField()
     post_discount_price = serializers.SerializerMethodField()
@@ -37,12 +37,10 @@ class ProductSerializer(serializers.ModelSerializer):
             obj.cost_price, obj.percentual_margin, obj.type.percentual_margin
         )
 
-    def get_post_discount_price(self, obj, updated_units_purchased=None):
+    def get_post_discount_price(self, obj, updated_units=None):
         return Util.calculate_value_after_discount(
             self.get_price(obj),
-            updated_units_purchased
-            if updated_units_purchased is not None
-            else obj.units_purchased,
+            updated_units if updated_units is not None else obj.units,
             obj.promotion.discount_amount,
             obj.promotion.percentual_discount,
             obj.promotion.unit_discount,

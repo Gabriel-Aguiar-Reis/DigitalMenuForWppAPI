@@ -13,20 +13,17 @@ class Util:
     @staticmethod
     def calculate_value_after_discount(
         price: Optional[float] = None,
-        units_purchased: Optional[int] = None,
+        units: Optional[int] = None,
         discount_amount: Optional[int] = None,
         percentual_discount: Optional[float] = None,
         unit_discount: Optional[int] = None,
         amount_for_discount: Optional[float] = None,
         unit_for_discount: Optional[int] = None,
-        cost_price: Optional[float] = None,
-        product_percentual_margin: Optional[float] = None,
-        type_percentual_margin: Optional[float] = None,
     ) -> float:
 
         parameters = [
             price,
-            units_purchased,
+            units,
             discount_amount,
             percentual_discount,
             unit_discount,
@@ -38,7 +35,7 @@ class Util:
 
         (
             price,
-            units_purchased,
+            units,
             discount_amount,
             percentual_discount,
             unit_discount,
@@ -46,7 +43,7 @@ class Util:
             unit_for_discount,
         ) = valid_params
 
-        value = price * units_purchased
+        value: Optional[int | float] = price * units
 
         if not value:
             result = 'Invalid: There is no value reported.'
@@ -89,7 +86,7 @@ class Util:
                 ),
             ]
 
-            result = 'Invalid: Non-applicable discount.'
+            result = f'Invalid: Non-applicable discount.'
             for (
                 discount_type,
                 discount_validation,
@@ -104,7 +101,10 @@ class Util:
                         result = value - (unit_discount * price)
                     break
 
-        return result
+        if isinstance(result, str):
+            return result, value
+        else:
+            return result
 
     @staticmethod
     def calculate_product_price(
