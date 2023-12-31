@@ -280,6 +280,81 @@ class AddQtyToIngredient(APIView):
         return Response(updated_product_data, status=status.HTTP_200_OK)
 
 
+class RemoveQtyFromIngredient(APIView):
+    def post(self, request, pk, ingredient_pk, qty_removed, *args, **kwargs):
+        product_uuid = pk
+        ingredient_uuid = ingredient_pk
+        qty_removed = qty_removed
+
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+
+        cart = request.session.get('cart', {'products': []})
+        products = cart.get('products', [])
+        product = get_object_or_404(Product, id=product_uuid)
+
+        updated = False
+        for product_data in products:
+            if product_data['id'] == str(product_uuid):
+                ingredients = product_data['ingredients']
+
+                for ingredient in ingredients:
+                    if ingredient['id'] == str(ingredient_uuid):
+                        if ingredient['qty'] >= qty_removed:
+                            ingredient['qty'] -= qty_removed
+                            updated = True
+                        else:
+                            ingredient['qty'] = 0
+                            updated = True
+
+        if not updated:
+            product_data = {
+                'id': str(product_uuid),
+                'ingredients': [
+                    {
+                        'id': str(ingredient_uuid),
+                        'qty': 0 
+                    }
+                ]
+            }
+            products.append(product_data)
+
+        request.session['cart'] = cart
+
+        ingredient_data = next(
+            (ingredient for ingredient in product_data['ingredients'] if ingredient['id'] == str(ingredient_uuid)),
+            None
+        )
+        if ingredient_data:
+            updated_product_data = {
+                'id': str(product.id),
+                'units': product.units,
+                'name': product.name,
+                'percentual_margin': product.percentual_margin,
+                'cost_price': product.cost_price,
+                'ingredients': [{
+                    'id': ingredient_data['id'],
+                    'qty': ingredient_data['qty']
+                }],
+            }
+            product_instance = Product.objects.get(id=product_uuid)
+            product_serializer = ProductSerializer(
+                product_instance, context={'request': request}
+            )
+            updated_product_data['price'] = product_serializer.data['price']
+            updated_product_data[
+                'post_discount_price'
+            ] = product_serializer.get_post_discount_price(
+                product_instance,
+                updated_units=product.units,
+            )
+
+            return Response(updated_product_data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Ingredient not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
 class RemoveIngredient(APIView):
     def delete(self, request, *args, **kwargs):
         product_uuid = str(kwargs.get('pk'))

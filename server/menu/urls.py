@@ -18,6 +18,7 @@ from .views import (
     ProductDetail,
     ProductList,
     RemoveFromCart,
+    RemoveQtyFromIngredient,
     TypeDetail,
     TypeList,
     ViewCart,
@@ -51,6 +52,7 @@ urlpatterns = [
     path('products/<uuid:pk>/ingredients/', ListIngredients.as_view(), name='ListIngredients'),
     path('products/<uuid:pk>/add_ingredient/<str:name>/<str:price>/', AddIngredient.as_view(), name='AddIngredient'),
     path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/add_qty/<int:qty_added>/', AddQtyToIngredient.as_view(), name='AddQtyToIngredient'),
+    path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/remove_qty/<int:qty_removed>/', RemoveQtyFromIngredient.as_view(), name='RemoveQtyFromIngredient'),
     path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/remove/', RemoveIngredient.as_view(), name='RemoveIngredient'),
     path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/get/', GetIngredient.as_view(), name='GetIngredient'),
     path(
