@@ -1,0 +1,8 @@
+* {
+    font-family: 'Segoe UI', sans-serif;
+}
+.type-card__container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 0 0;
+}

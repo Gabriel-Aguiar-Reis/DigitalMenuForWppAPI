@@ -1,0 +1,18 @@
+.type__container {
+    border: 5px solid rgb(144, 179, 210);
+    border-radius: 3rem;
+    max-width: 80%;
+    min-width: 600px;
+    display: flex;
+    justify-content: center;
+}
+.type__title > h1 {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 0 0;
+}
+.type__description {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}

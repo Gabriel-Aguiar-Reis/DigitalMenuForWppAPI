@@ -1,8 +1,32 @@
-<p>product-card works!</p>
-<button (click)="removeOne()">-1</button>
-<button (click)="addOne()">+1</button>
-<button (click)="addToCart()">Add</button>
-<div>Total para adicionar: {{ unitsToShop }}</div>
-<!-- <button (click)="addToCart()">Adicionar ao Carrinho</button> -->
-<div>Total no Carrinho: {{ totalUnitsInCart }}</div>
-<button (click)="removeFromCart()">Remove All</button>
+<div class="product__container">
+    <div class="product__image">
+        <img
+        src="https://bing.com/th?id=OSK.ecdf11646cd56e60ea36607dc2601081"
+        alt="product_image">
+    </div>
+    <div class="product__content">
+        <div class="product__title">
+            <h2>{{productName}}</h2>
+        </div>
+        <div class="product__description">
+            <span>{{productDescription}}</span>
+        </div>
+        <div class="product__price">
+            <span>R$ {{ productPrice | numberFormat }}</span>
+
+        </div>
+    </div>
+    <!-- <p>product-card works!</p>
+    <img
+        src="https://www.bing.com/th?id=OIP.MV9DfhgSzE7LkERRpl6k0QHaHa&w=150&h=150&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2"
+        alt="product_image">
+    <button (click)="removeOne()">-1</button>
+    <button (click)="addOne()">+1</button>
+    <button (click)="addToCart()">Add</button>
+    <button (click)="removeFromCart()">Remove</button>
+    <div>Total a alterar: {{ units }}</div>
+    <div>Total no Carrinho: {{ totalUnitsInCart }}</div>
+    <div>Preço no Carrinho: {{ totalPriceByUnit }}</div>
+    <button (click)="cartClear()">Remove All</button> -->
+</div>
+

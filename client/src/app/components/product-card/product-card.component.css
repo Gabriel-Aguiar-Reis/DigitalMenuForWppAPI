@@ -1,0 +1,30 @@
+.product__container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 630px;
+    min-width: 500px;
+    margin-bottom: 10px;
+}
+.product__title > h2 {
+    margin: 0;
+}
+.product__description {
+    max-width: 350px;
+    margin: 0 20px 0 0;
+}
+.product__price {
+    margin: 0;
+    min-width: 400px;
+    display: flex;
+    justify-content: flex-end;
+}
+.product__image > img {
+    min-width: 130px;
+    height: 180px;
+    border-radius: 10px;
+}
+.product__content {
+    margin-left: 10px;
+}

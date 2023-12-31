@@ -4,11 +4,15 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 from .views import (
+    AddIngredient,
+    AddQtyToIngredient,
     AddToCart,
     CampaignDetail,
     CampaignList,
     ClearCart,
+    GetIngredient,
     HealthCheck,
+    ListIngredients,
     PhotoDetail,
     PhotoList,
     ProductDetail,
@@ -17,6 +21,7 @@ from .views import (
     TypeDetail,
     TypeList,
     ViewCart,
+    RemoveIngredient,
 )
 
 schema_view = get_schema_view(
@@ -43,6 +48,11 @@ urlpatterns = [
     path('photos/<uuid:pk>/', PhotoDetail.as_view(), name='PhotoDetail'),
     path('photos/', PhotoList.as_view(), name='PhotoList'),
     path('products/<uuid:pk>/', ProductDetail.as_view(), name='ProductDetail'),
+    path('products/<uuid:pk>/ingredients/', ListIngredients.as_view(), name='ListIngredients'),
+    path('products/<uuid:pk>/add_ingredient/<str:name>/<str:price>/', AddIngredient.as_view(), name='AddIngredient'),
+    path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/add_qty/<int:qty_added>/', AddQtyToIngredient.as_view(), name='AddQtyToIngredient'),
+    path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/remove/', RemoveIngredient.as_view(), name='RemoveIngredient'),
+    path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/get/', GetIngredient.as_view(), name='GetIngredient'),
     path(
         'products/<uuid:pk>/add/<int:units>/',
         AddToCart.as_view(),
