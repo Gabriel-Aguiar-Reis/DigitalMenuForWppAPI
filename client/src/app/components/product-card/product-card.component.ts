@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { DecimalPipe } from '@angular/common';
@@ -13,7 +13,8 @@ import { NumberFormatPipe } from '../../pipes/number-format.pipe';
   styleUrl: './product-card.component.css'
 })
 export class ProductCardComponent implements OnInit{
-  productId: string = '7426ad0c-08b7-4cb0-ad43-81461fcda516'
+  @Input()
+  productId: string = ''
   productPrice: number = 0
   units: number = 0
   productName: string = ''

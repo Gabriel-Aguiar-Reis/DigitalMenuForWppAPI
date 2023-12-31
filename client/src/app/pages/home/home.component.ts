@@ -1,15 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuTypeComponent } from '../../components/menu-type/menu-type.component';
 import { ShoppingCartComponent } from '../../components/shopping-cart/shopping-cart.component';
 import { TypeCardComponent } from '../../components/type-card/type-card.component';
+import { MenuTypeService } from '../../services/menu-type.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [MenuTypeComponent, ShoppingCartComponent, TypeCardComponent],
+  imports: [MenuTypeComponent, ShoppingCartComponent, TypeCardComponent, CommonModule],
+  providers: [MenuTypeService],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
+  types: any[] = []
+
+
+  constructor (private menuTypeService: MenuTypeService) {}
+
+  ngOnInit(): void {
+    this.menuTypeService.getTypes().subscribe(
+      (response) => {
+        this.types = response
+      }
+    );
+  }
 
 }

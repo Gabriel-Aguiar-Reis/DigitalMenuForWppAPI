@@ -4,11 +4,10 @@
             <h1>{{typeName}}</h1>
         </div>
         <div class="type__description">
-            <span>This is a placeholder description</span>
+            <span>{{typeDescription}}</span>
         </div>
-        <div class="type__products">
-            <app-product-card></app-product-card>
-            <app-product-card></app-product-card>
+        <div class="type__products" *ngFor='let product of products'>
+            <app-product-card [productId]="product.id"></app-product-card>
         </div>
     </div>
 </div>

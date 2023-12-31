@@ -1,5 +1,5 @@
 <app-shopping-cart></app-shopping-cart>
 <app-menu-type></app-menu-type>
-<div class="type-card__container">
-    <app-type-card></app-type-card>
+<div class="type-card__container" *ngFor="let type of types">
+    <app-type-card [typeId]="type.id"></app-type-card>
 </div>

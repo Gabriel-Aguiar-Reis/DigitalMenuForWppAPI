@@ -1,1 +1,5 @@
-<p>menu-type works!</p>
+<div #menu class="menu_type__container">
+    <div *ngFor="let type of types" [class.highlighted]="type === selectedType">
+      <a (click)="selectType(type); scrollToType(type)">{{ type }}</a>
+    </div>
+  </div>

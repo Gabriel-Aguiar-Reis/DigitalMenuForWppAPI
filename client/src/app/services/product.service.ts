@@ -12,7 +12,7 @@ export class ProductService {
 
   addToCart(productId: string, unitsToAdd: number): Observable<any> {
     const url = `${this.apiUrl}/products/${productId}/add/${unitsToAdd}/`;
-    return this.http.patch<any>(url, { "uuid": productId, "units_added": unitsToAdd }, { withCredentials: true });
+    return this.http.patch<any>(url, { "uuid": productId, "units_added": unitsToAdd }, { withCredentials: true })
   }
   removeFromCart(productId: string, unitsToAdd: number): Observable<any> {
     const url = `${this.apiUrl}/products/${productId}/remove/${unitsToAdd}/`;
@@ -21,5 +21,9 @@ export class ProductService {
   getProduct(productId: string): Observable<any> {
     const url = `${this.apiUrl}/products/${productId}/`;
     return this.http.get<any>(url, { withCredentials: true });
+  }
+  getProducts(): Observable<any> {
+    const url = `${this.apiUrl}/products/`;
+    return this.http.get<any>(url,{ withCredentials: true })
   }
 }
