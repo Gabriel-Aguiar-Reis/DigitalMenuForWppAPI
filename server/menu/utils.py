@@ -1,5 +1,7 @@
 from typing import Optional
 
+from .models import Product, Type
+
 
 class Util:
     @staticmethod
@@ -142,3 +144,13 @@ class Util:
         else:
             result = 0
         return result
+    
+    @staticmethod
+    def get_type_percentual_margin(
+        product_id: Optional[str] = None
+    ) -> float:
+        object = Product.objects.get(id=product_id)
+        type = object.type
+        type_data = Type.objects.get(name=type)
+        return type_data.percentual_margin
+        
