@@ -11,9 +11,13 @@
         <div class="product__description">
             <span>{{productDescription}}</span>
         </div>
-        <div class="product__price">
-            <span>R$ {{ productPrice | numberFormat }}</span>
-
+        <div class="product__purchase">
+            <div class="product__price">
+                <span>R$ {{ productPrice | numberFormat }}</span>
+            </div>
+            <div class="product__buy">
+                <span>+</span>
+            </div>
         </div>
     </div>
     <!-- <p>product-card works!</p>

@@ -1,7 +1,8 @@
+@use '../../../variables.scss';
+
 .menu_type__container {
   width: 100%;
 }
-
 .menu_type__list {
   width: 100%;
   display: flex;
@@ -9,18 +10,17 @@
   justify-content: space-between;
   list-style-type: none;
 }
-
 .menu_type__list > a {
   display: flex;
   justify-content: center;
-  font-size: 12px;
-  color: #ffffff;
+  font-size:12px;
+  color: variables.$background-color;
   text-decoration: none;
   white-space: nowrap;
   height: 20px;
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 15px;
-  background-color: #daa520;
+  background-color: variables.$secondary-color;
   cursor: pointer;
-}/*# sourceMappingURL=menu-type.component.css.map */
+}

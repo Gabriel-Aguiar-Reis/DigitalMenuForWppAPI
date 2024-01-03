@@ -1,5 +1,23 @@
-<app-shopping-cart></app-shopping-cart>
-<app-menu-type></app-menu-type>
-<div class="type-card__container" *ngFor="let type of types">
-    <app-type-card [typeId]="type.id"></app-type-card>
+<div class="home__container">
+    <div class="nav_bar__container">
+        <div class="upper_bar__container">
+            <div class="logo__container">
+                <app-logo></app-logo>
+            </div>
+            <div class="searchbar__container">
+                <app-searchbar></app-searchbar>
+            </div>
+            <div class="cart__container">
+                <app-shopping-cart></app-shopping-cart>
+            </div>
+        </div>
+        <div class="lower_bar__container">
+            <div class="type_list__container">
+                <app-menu-type></app-menu-type>
+            </div>
+        </div>
+    </div>
+    <div class="type-card__container" *ngFor="let type of types">
+        <app-type-card [typeId]="type.id"></app-type-card>
+    </div>
 </div>

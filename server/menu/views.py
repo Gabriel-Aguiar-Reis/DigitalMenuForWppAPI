@@ -1,6 +1,5 @@
-from decimal import Decimal
 import uuid
-from django.contrib.sessions.models import Session
+
 from rest_framework import generics, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -13,7 +12,6 @@ from .serializers import (
     ProductSerializer,
     TypeSerializer,
 )
-
 
 class AddToCart(APIView):
     def patch(self, request, pk, units, *args, **kwargs):

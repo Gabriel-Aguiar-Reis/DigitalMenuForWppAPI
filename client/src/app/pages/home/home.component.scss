@@ -1,14 +1,13 @@
+@use '../../../variables.scss';
 .type-card__container {
   margin: 2rem 0 0 0.5rem;
 }
-
 .nav_bar__container {
   position: sticky;
   top: 0;
-  background-color: #ffffff;
+  background-color: variables.$background-color;
   z-index: 1000;
 }
-
 .upper_bar__container {
   font-size: 20px;
   display: flex;
@@ -16,7 +15,6 @@
   width: 100%;
   margin-bottom: 10px;
 }
-
 .lower_bar__container {
   padding-bottom: 5px;
-}/*# sourceMappingURL=home.component.css.map */
+}

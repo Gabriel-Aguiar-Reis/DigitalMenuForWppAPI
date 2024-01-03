@@ -1,13 +1,20 @@
 <div class="type__container">
     <div class="type__content">
-        <div class="type__title">
-            <h1>{{typeName}}</h1>
+        <div class="type__image">
+            <img 
+            src="https://th.bing.com/th/id/R.66e9efc2532a0f2ab2fd0ece13ac1a1c?rik=eM8Xlfu4J%2bDvUA&pid=ImgRaw&r=0"
+            alt="type_image">
         </div>
-        <div class="type__description">
-            <span>{{typeDescription}}</span>
+        <div class="type__texts">
+            <div class="type__title">
+                <h1>{{typeName}}</h1>
+            </div>
+            <div class="type__description">
+                <span>{{typeDescription}}</span>
+            </div>
         </div>
-        <div class="type__products" *ngFor='let product of products'>
-            <app-product-card [productId]="product.id"></app-product-card>
-        </div>
+    </div>
+    <div class="type__products">
+        <app-product-card [productId]="product.id" *ngFor='let product of products'></app-product-card>
     </div>
 </div>

@@ -35,7 +35,7 @@ class Util:
 
         valid_params = [Util.__is_valid(param) for param in parameters]
 
-        (
+        [
             price,
             units,
             discount_amount,
@@ -43,10 +43,9 @@ class Util:
             unit_discount,
             amount_for_discount,
             unit_for_discount,
-        ) = valid_params
+         ] = valid_params
 
         value: Optional[int | float] = price * units
-
         if not value:
             result = 'Invalid: There is no value reported.'
         elif (
@@ -153,4 +152,13 @@ class Util:
         type = object.type
         type_data = Type.objects.get(name=type)
         return type_data.percentual_margin
-        
+    
+    @staticmethod
+    def override_none_product_promo(obj):
+        object = Product.objects.get(id=obj.id)
+        type = object.type
+        type_data = Type.objects.get(name=type)
+        if (type_data.promotion != object.promotion
+            and object.promotion is None):
+            obj.promotion = type_data.promotion
+        return obj.promotion

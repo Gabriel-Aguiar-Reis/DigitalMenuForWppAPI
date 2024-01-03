@@ -1,30 +1,85 @@
+@charset "UTF-8";
 .product__container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    max-width: 630px;
-    min-width: 500px;
-    margin-bottom: 10px;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  margin-bottom: 10px;
+  margin-right: 20px;
+  width: 200px;
+  transition: 0.2s;
 }
-.product__title > h2 {
-    margin: 0;
+.product__container:hover {
+  transform: scale(1.05);
+  transition: 0.2s;
 }
-.product__description {
-    max-width: 350px;
-    margin: 0 20px 0 0;
+
+.product__image img {
+  max-width: 100%;
+  height: 300px;
+  width: 200px;
+  border-radius: 10px;
+  z-index: 1;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: center 100%;
+     object-position: center 100%;
+  box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.25);
 }
-.product__price {
-    margin: 0;
-    min-width: 400px;
-    display: flex;
-    justify-content: flex-end;
-}
-.product__image > img {
-    min-width: 130px;
-    height: 180px;
-    border-radius: 10px;
-}
+
 .product__content {
-    margin-left: 10px;
+  padding: 10px;
+  width: 200px;
+  position: absolute;
+  overflow: hidden;
+  bottom: 0;
+  z-index: 2;
+  background-color: #ffffff;
 }
+
+.product__title h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product__description {
+  margin: 0 20px 5px 0;
+  color: #808080;
+  font-size: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Número desejado de linhas */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product__purchase {
+  display: flex;
+  justify-content: space-between;
+}
+
+.product__price {
+  margin: 0;
+  font-weight: bold;
+  color: #daa520;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.product__buy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  color: #daa520;
+  border: 1px solid #daa520;
+  font-size: 16px;
+  cursor: pointer;
+}
+.product__buy span {
+  display: inline-block;
+  transform: translateY(-2px);
+}/*# sourceMappingURL=product-card.component.css.map */

@@ -38,16 +38,18 @@ class ProductSerializer(serializers.ModelSerializer):
         )
 
     def get_post_discount_price(self, obj, updated_units=None):
+        obj.promotion = Util.override_none_product_promo(obj)
         if obj.promotion is not None:
-            return Util.calculate_value_after_discount(
+            result = Util.calculate_value_after_discount(
                 self.get_price(obj),
                 updated_units if updated_units is not None else obj.units,
-                obj.promotion.discount_amount if obj.promotion.discount_amount is not None else 0,
-                obj.promotion.percentual_discount if obj.promotion.percentual_discount is not None else 0,
-                obj.promotion.unit_discount if obj.promotion.unit_discount is not None else 0,
-                obj.promotion.amount_for_discount if obj.promotion.amount_for_discount is not None else 0,
-                obj.promotion.unit_for_discount if obj.promotion.discount_amount is not None else 0,
+                obj.promotion.discount_amount,
+                obj.promotion.percentual_discount,
+                obj.promotion.unit_discount,
+                obj.promotion.amount_for_discount,
+                obj.promotion.unit_for_discount,
             )
+            return result
         else:
             return self.get_price(obj) * updated_units if updated_units is not None else obj.units
 
