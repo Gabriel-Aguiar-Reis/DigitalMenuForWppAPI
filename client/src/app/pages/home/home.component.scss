@@ -5,16 +5,18 @@
 .nav_bar__container {
   position: sticky;
   top: 0;
-  background-color: variables.$background-color;
+  background-color: variables.$primary-color;
   z-index: 1000;
+  color: variables.$on-primary-font-color;
 }
 .upper_bar__container {
   font-size: 20px;
   display: flex;
   justify-content: space-between;
   width: 100%;
+  padding-top: 10px;
   margin-bottom: 10px;
 }
 .lower_bar__container {
-  padding-bottom: 5px;
+  padding-bottom: 10px;
 }

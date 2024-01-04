@@ -2,6 +2,14 @@ import uuid
 
 from django.db import models
 
+class ShopConfig(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    shop_name = models.CharField(max_length=255)
+    opening_hours = models.JSONField(default=list, blank=True, null=True)
+    theme = models.JSONField(default=list, blank=True, null=True)
+    
+    def __str__(self):
+        return f'<{self.shop_name}> {self.id}'
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -16,6 +24,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2, default=0, blank=True)
     post_discount_price = models.DecimalField(max_digits=6, decimal_places=2, default=0, blank=True)
     units = models.IntegerField(default=0)
+    in_stock = models.BooleanField(default=True)
     
     def __str__(self):
         return f'<{self.type.name}> {self.name}'
@@ -48,6 +57,7 @@ class Photo(models.Model):
     name = models.CharField(max_length=255)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, blank=True, null=True, related_name='photos')
     type = models.ForeignKey('Type', on_delete=models.CASCADE, blank=True, null=True, related_name='photos')
+    logo = models.ForeignKey('ShopConfig', on_delete=models.CASCADE, blank=True, null=True, related_name='photo')
     image = models.ImageField(upload_to='data/images/', null=True, blank=True)
     
     def __str__(self):

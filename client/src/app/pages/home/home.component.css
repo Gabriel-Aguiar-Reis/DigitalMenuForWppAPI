@@ -5,8 +5,9 @@
 .nav_bar__container {
   position: sticky;
   top: 0;
-  background-color: #ffffff;
+  background-color: #4b1d12;
   z-index: 1000;
+  color: #fff;
 }
 
 .upper_bar__container {
@@ -14,9 +15,10 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+  padding-top: 10px;
   margin-bottom: 10px;
 }
 
 .lower_bar__container {
-  padding-bottom: 5px;
+  padding-bottom: 10px;
 }/*# sourceMappingURL=home.component.css.map */

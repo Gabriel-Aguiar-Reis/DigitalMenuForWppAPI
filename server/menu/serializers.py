@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import Campaign, Photo, Product, Type
+from .models import Campaign, Photo, Product, ShopConfig, Type
 from .utils import Util
 
 
@@ -53,6 +53,12 @@ class ProductSerializer(serializers.ModelSerializer):
         else:
             return self.get_price(obj) * updated_units if updated_units is not None else obj.units
 
+class ShopConfigSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShopConfig
+        fields = '__all__'
+        
+    photo = PhotoSerializer(many=False, read_only=True)
 
 class TypeSerializer(serializers.ModelSerializer):
     class Meta:

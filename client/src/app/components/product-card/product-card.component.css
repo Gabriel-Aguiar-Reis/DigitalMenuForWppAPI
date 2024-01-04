@@ -33,7 +33,7 @@
   overflow: hidden;
   bottom: 0;
   z-index: 2;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 
 .product__title h2 {
@@ -60,7 +60,7 @@
 .product__price {
   margin: 0;
   font-weight: bold;
-  color: #daa520;
+  color: #F5C215;
   display: flex;
   justify-content: flex-start;
 }
@@ -74,8 +74,8 @@
   height: 20px;
   background-color: #fff;
   border-radius: 50%;
-  color: #daa520;
-  border: 1px solid #daa520;
+  color: #F5C215;
+  border: 1px solid #F5C215;
   font-size: 16px;
   cursor: pointer;
 }
