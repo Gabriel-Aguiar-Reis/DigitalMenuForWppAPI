@@ -1,3 +1,7 @@
+.home__container {
+  background-color: #ffffff;
+}
+
 .type-card__container {
   margin: 2rem 0 0 0.5rem;
 }
@@ -5,20 +9,19 @@
 .nav_bar__container {
   position: sticky;
   top: 0;
-  background-color: #4b1d12;
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  font-size: 20px;
   z-index: 1000;
+  background-color: #4b1d12;
   color: #fff;
 }
 
-.upper_bar__container {
-  font-size: 20px;
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding-top: 10px;
-  margin-bottom: 10px;
-}
-
-.lower_bar__container {
+.type_list__container {
   padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
 }/*# sourceMappingURL=home.component.css.map */

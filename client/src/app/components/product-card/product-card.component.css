@@ -60,7 +60,7 @@
 .product__price {
   margin: 0;
   font-weight: bold;
-  color: #F5C215;
+  color: #e7c465;
   display: flex;
   justify-content: flex-start;
 }
@@ -74,8 +74,8 @@
   height: 20px;
   background-color: #fff;
   border-radius: 50%;
-  color: #F5C215;
-  border: 1px solid #F5C215;
+  color: #e7c465;
+  border: 1px solid #e7c465;
   font-size: 16px;
   cursor: pointer;
 }
