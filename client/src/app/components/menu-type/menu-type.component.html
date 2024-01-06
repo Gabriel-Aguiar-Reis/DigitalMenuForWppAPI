@@ -1,5 +1,5 @@
 <div class="menu_type__container">
   <nav class="menu_type__list">
-    <a *ngFor="let type of types">{{ type }}</a>
+    <a *ngFor="let type of types" (click)="onTypeClick(type)">{{ type }}</a>
   </nav>
 </div>

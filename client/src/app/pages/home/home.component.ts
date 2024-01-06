@@ -6,6 +6,7 @@ import { ShoppingCartComponent } from '../../components/shopping-cart/shopping-c
 import { TypeCardComponent } from '../../components/type-card/type-card.component';
 import { MenuTypeService } from '../../services/menu-type.service';
 import { CommonModule } from '@angular/common';
+import { ScrollService } from '../../services/scroll.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,7 @@ export class HomeComponent implements OnInit{
   types: any[] = []
 
 
-  constructor (private menuTypeService: MenuTypeService) {}
+  constructor (private menuTypeService: MenuTypeService, private scrollService: ScrollService) {}
 
   ngOnInit(): void {
     this.menuTypeService.getTypes().subscribe(
@@ -27,6 +28,14 @@ export class HomeComponent implements OnInit{
         this.types = response
       }
     );
+    this.scrollService.scrollToType.subscribe((type: string) => {
+      this.scrollToType(type);
+    });
   }
-
+  scrollToType(type: string): void {
+    const element = document.getElementById(type);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 }
