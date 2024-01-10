@@ -1,1 +1,43 @@
 @use '../../../variables.scss';
+
+.searchbar__container {
+    display: flex;
+    background-color: rgba(variables.$primary-color, 1);
+    flex-direction: row;
+    box-sizing: border-box;
+    position: relative;
+    flex-wrap: wrap;
+    align-items: center;
+    width: -moz-fit-content;
+    width: fit-content;
+    border-radius: 20px;
+    border: 1px solid variables.$secondary-color;
+    span {
+        padding-left: 10px;
+        border-right: 1px solid variables.$secondary-color;
+        svg {
+            color: variables.$secondary-color;
+            margin-right: 10px;
+        }
+    }
+    input {
+        margin-right: 10px;
+        height: 27px;
+        width: 180px;
+        background-color: rgba(variables.$primary-color, 1);
+        padding-left: 5px;
+        border: 0px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 0;
+        color: variables.$secondary-color;
+    }
+    ::placeholder {
+        color: variables.$secondary-color;
+        opacity: 1;
+    }
+    ::-ms-input-placeholder {
+        color: variables.$secondary-color;
+    }
+}

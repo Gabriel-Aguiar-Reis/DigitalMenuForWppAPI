@@ -1,4 +1,3 @@
-@charset "UTF-8";
 .product__container {
   display: flex;
   position: relative;
@@ -47,7 +46,7 @@
   color: #808080;
   font-size: 10px;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Número desejado de linhas */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

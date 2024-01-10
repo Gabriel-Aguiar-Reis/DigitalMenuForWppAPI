@@ -1,14 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
-import { DecimalPipe } from '@angular/common';
 import { NumberFormatPipe } from '../../pipes/number-format.pipe';
 
 @Component({
   selector: 'app-product-card',
   standalone: true,
   imports: [NumberFormatPipe],
-  providers: [ProductService, CartService, DecimalPipe],
+  providers: [ProductService, CartService],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.css'
 })

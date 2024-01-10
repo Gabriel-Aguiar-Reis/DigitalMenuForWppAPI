@@ -1,9 +1,5 @@
 .home__container {
-  background-color: #ffffff;
-}
-
-.type-card__container {
-  margin: 2rem 0 0 0.5rem;
+  background-color: #fff;
 }
 
 .nav_bar__container {
@@ -12,12 +8,29 @@
   display: flex;
   justify-content: space-around;
   align-content: center;
-  padding-bottom: 10px;
   margin-bottom: 10px;
   font-size: 20px;
   z-index: 1000;
   background-color: #4b1d12;
   color: #fff;
+}
+
+.logo__container {
+  padding-bottom: 10px;
+}
+
+.searchbar__container {
+  display: flex;
+  align-items: center;
+}
+
+.main_page__container {
+  display: flex;
+  flex-direction: row;
+}
+
+.type-card__container {
+  margin: 2rem 0 0 0.5rem;
 }
 
 .type_list__container {
