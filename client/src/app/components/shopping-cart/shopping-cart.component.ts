@@ -1,8 +1,10 @@
-import { Cart } from './../../interfaces/cart';
+import { IAppState, Cart, addOneToCart, removeOneFromCart, getCart } from './../../store/app.state';
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
 import { NumberFormatPipe } from '../../pipes/number-format.pipe';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -15,19 +17,26 @@ import { NumberFormatPipe } from '../../pipes/number-format.pipe';
 
 
 export class ShoppingCartComponent implements OnInit{
-  cart: Cart = {"products": []}
-  constructor (private cartService: CartService) {}
+  
+  constructor (
+    private store: Store<{ app: IAppState, cart: Cart }>,
+  ) {}
+    
+  cart$ = this.store.select('app').pipe(map(app => app.cart));
+  products$ = this.store.select('app').pipe(map(app => app.cart.products))
+
+  // addOneToCart() {
+  //   this.store.dispatch(addOneToCart())
+  // }
+
+  // removeOneFromCart() {
+  //   this.store.dispatch(removeOneFromCart())
+  // }
+
   ngOnInit(): void {
-    this.cartService.getCart().subscribe(
-      (response) => {
-        for (const product of response.products) {
-          if (product.post_discount_price.length > 1) {
-            product.post_discount_price = product.post_discount_price[product.post_discount_price.length - 1];
-          }
-        }
-        console.log(response)
-        this.cart = response
-      }
-    )
+    
+    this.store.dispatch(getCart())
+
   }
 }
+  

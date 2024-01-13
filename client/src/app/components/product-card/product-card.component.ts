@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { NumberFormatPipe } from '../../pipes/number-format.pipe';
+import { Store } from '@ngrx/store';
+import { addOneToCart, Product } from '../../store/app.state';
 
 @Component({
   selector: 'app-product-card',
@@ -18,17 +20,19 @@ export class ProductCardComponent implements OnInit{
   units: number = 0
   productName: string = ''
   productDescription: string = ''
+  product: any = null
 
   totalUnitsInCart: number = 0
   totalPriceByUnit: number = 0
   
-  constructor (private productService: ProductService, private cartService: CartService) {}
+  constructor (private productService: ProductService, private cartService: CartService, private store: Store) {}
   ngOnInit(): void {
     this.productService.getProduct(this.productId).subscribe(
       (response) => {
         this.productPrice = response.price
         this.productName = response.name
         this.productDescription = response.description
+        this.product = response
       }
     )
   }
@@ -71,8 +75,8 @@ export class ProductCardComponent implements OnInit{
     )
   }
 
-  addOne(): void {
-    this.units += 1;
+  addOne(product: any): void {
+    this.store.dispatch(addOneToCart({payload: product}))
   }
 
   removeOne(): void {

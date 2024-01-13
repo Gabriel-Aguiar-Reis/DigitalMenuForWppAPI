@@ -176,10 +176,10 @@ class ViewCart(APIView):
                     )
                     
             return Response(cart_data, status=status.HTTP_200_OK)
+        
+        cart = request.session.get('cart', {'products': []})
 
-        return Response(
-            {'detail': 'No cart available'}, status=status.HTTP_404_NOT_FOUND
-        )
+        return Response(cart, status=status.HTTP_200_OK)
 
 
 class AddIngredient(APIView):

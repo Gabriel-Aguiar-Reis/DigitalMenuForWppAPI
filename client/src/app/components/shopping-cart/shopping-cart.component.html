@@ -4,7 +4,7 @@
     </div>
     <div class="cart__content">
         <ol>
-            <li *ngFor="let product of cart.products" class="product__container">
+            <li *ngFor="let product of products$ | async" class="product__container">
                 <img src="https://bing.com/th?id=OSK.ecdf11646cd56e60ea36607dc2601081" alt="product_image">
                 <div class="product__texts">
                     <span>{{product.name}}</span>
