@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from .models import Product, Type
 
@@ -112,6 +112,7 @@ class Util:
         cost_price: Optional[float] = None,
         product_percentual_margin: Optional[float] = None,
         type_percentual_margin: Optional[float] = None,
+        ingredients: list() = None
     ) -> float:
 
         parameters = [
@@ -129,16 +130,28 @@ class Util:
         ) = valid_params
 
         if product_percentual_margin != 0 and type_percentual_margin != 0:
+            for ingredient in ingredients:
+                if ingredient['qty'] > 0:
+                    cost_price += ingredient['qty'] * ingredient['price']
             result = (
                 cost_price
                 + (cost_price * product_percentual_margin)
                 + (cost_price * type_percentual_margin)
             )
         elif product_percentual_margin != 0 and type_percentual_margin == 0:
+            for ingredient in ingredients:
+                if ingredient['qty'] > 0:
+                    cost_price += ingredient['qty'] * ingredient['price']
             result = cost_price + (cost_price * product_percentual_margin)
         elif type_percentual_margin != 0 and product_percentual_margin == 0:
+            for ingredient in ingredients:
+                if ingredient['qty'] > 0:
+                    cost_price += ingredient['qty'] * ingredient['price']
             result = cost_price + (cost_price * type_percentual_margin)
         elif product_percentual_margin == 0 and type_percentual_margin:
+            for ingredient in ingredients:
+                if ingredient['qty'] > 0:
+                    cost_price += ingredient['qty'] * ingredient['price']
             result = cost_price
         else:
             result = 0

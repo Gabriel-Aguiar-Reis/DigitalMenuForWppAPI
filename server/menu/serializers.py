@@ -34,7 +34,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_price(self, obj):
         return Util.calculate_product_price(
-            obj.cost_price, obj.percentual_margin, Util.get_type_percentual_margin(obj.id)
+            obj.cost_price,
+            obj.percentual_margin,
+            Util.get_type_percentual_margin(obj.id),
+            obj.ingredients
         )
 
     def get_post_discount_price(self, obj, updated_units=None):

@@ -5,18 +5,33 @@
     <div class="cart__content">
         <ol>
             <li *ngFor="let product of products$ | async" class="product__container">
-                <img src="https://bing.com/th?id=OSK.ecdf11646cd56e60ea36607dc2601081" alt="product_image">
-                <div class="product__texts">
-                    <span>{{product.name}}</span>
-                    <div class="product_price__info">
-                        <button type="button">-</button>
-                        <span>{{product.units}}</span>
-                        <button type="button">+</button>
-                        <span>R$ {{product.post_discount_price | numberFormat}}</span>
+                <div class="product__container" *ngIf="product.units > 0">
+                    <img 
+                    src="https://bing.com/th?id=OSK.ecdf11646cd56e60ea36607dc2601081" 
+                    alt="product_image">
+                    <div class="product__texts">
+                        <span>{{product.name}}</span>
+                        <div class="product_price__info">
+                            <button type="button" (click)="removeOneFromCart(product)">-</button>
+                            <span>{{product.units}}</span>
+                            <button type="button" (click)="addOneToCart(product, products$)">+</button>
+                            <span>R$ {{(Number(product.price) * product.units) | numberFormat}}</span>
+                            <div class="product_ingredient_price__info" *ngFor="let ingredient of product.ingredients">
+                                <button type="button">-</button>
+                                <span>{{ingredient.qty}}</span>
+                                <button type="button">+</button>
+                                <span>R$ {{(ingredient.price * Number(product.percentualMargin)) | numberFormat}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </li>
         </ol>
     </div>
-    <div class="cart__bill"></div>
+    <div class="cart_bill__container" *ngIf="products$ | async as products">
+        <div class="cart__bill" *ngIf="products.length > 0">
+            <span>R$ {{(totalOrderPrice$ | async) | numberFormat}}</span>
+            <button type="button" (click)="sendOrder()" >Finalizar Pedido</button>
+        </div>
+    </div>
 </div>

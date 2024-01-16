@@ -1,4 +1,4 @@
-import { IAppState, Cart, addOneToCart, removeOneFromCart, getCart } from './../../store/app.state';
+import { IAppState, Cart, addOneToCart, removeOneFromCart, getCart, sendOrder, setTotalOrderPrice } from './../../store/app.state';
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../../services/cart.service';
 import { CommonModule } from '@angular/common';
@@ -17,22 +17,27 @@ import { map } from 'rxjs/operators';
 
 
 export class ShoppingCartComponent implements OnInit{
-  
+  Number(string: string) {return parseFloat(string)}
   constructor (
     private store: Store<{ app: IAppState, cart: Cart }>,
   ) {}
     
   cart$ = this.store.select('app').pipe(map(app => app.cart));
   products$ = this.store.select('app').pipe(map(app => app.cart.products))
+  totalOrderPrice$ = this.store.select('app').pipe(map(app => app.totalOrderPrice))
 
-  // addOneToCart() {
-  //   this.store.dispatch(addOneToCart())
-  // }
+  addOneToCart(product: any, products: any) {
+    this.store.dispatch(addOneToCart({payload : product}))
+    this.store.dispatch(setTotalOrderPrice({payload : products}))
+  }
 
-  // removeOneFromCart() {
-  //   this.store.dispatch(removeOneFromCart())
-  // }
+  removeOneFromCart(product: any) {
+    this.store.dispatch(removeOneFromCart({payload : product}))
+  }
 
+  sendOrder(): void {
+    this.store.dispatch(sendOrder())
+  }
   ngOnInit(): void {
     
     this.store.dispatch(getCart())

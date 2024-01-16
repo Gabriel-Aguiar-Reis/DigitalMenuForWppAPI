@@ -3,7 +3,8 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { NumberFormatPipe } from '../../pipes/number-format.pipe';
 import { Store } from '@ngrx/store';
-import { addOneToCart, Product } from '../../store/app.state';
+import { addOneToCart, Cart, IAppState, setTotalOrderPrice } from '../../store/app.state';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-product-card',
@@ -25,7 +26,13 @@ export class ProductCardComponent implements OnInit{
   totalUnitsInCart: number = 0
   totalPriceByUnit: number = 0
   
-  constructor (private productService: ProductService, private cartService: CartService, private store: Store) {}
+  constructor (
+    private productService: ProductService,
+    private cartService: CartService,
+    private store: Store<{ app: IAppState, cart: Cart }>
+    ) {}
+
+  cart$ = this.store.select('app').pipe(map(app => app.cart));
   ngOnInit(): void {
     this.productService.getProduct(this.productId).subscribe(
       (response) => {
@@ -36,53 +43,10 @@ export class ProductCardComponent implements OnInit{
       }
     )
   }
-  addToCart(): void {
-    this.productService.addToCart(this.productId, this.units).subscribe(
-      (response) => {
 
-        this.totalUnitsInCart = response.units;
-
-        if (Array.isArray(response.post_discount_price) && response.post_discount_price.length === 2) {
-          this.totalPriceByUnit = response.post_discount_price[1];
-        } else {
-          this.totalPriceByUnit = response.post_discount_price;
-        } 
-        this.units = 0
-        console.log(response);
-      },
-      (error) => {
-        console.error('Erro ao adicionar ao carrinho', error);
-      }
-    )
-  }
-
-  removeFromCart(): void {
-    this.productService.removeFromCart(this.productId, this.units).subscribe(
-      (response) => {
-        this.totalUnitsInCart = response.units
-
-        if (Array.isArray(response.post_discount_price) && response.post_discount_price.length === 2) {
-          this.totalPriceByUnit = response.post_discount_price[1];
-        } else {
-          this.totalPriceByUnit = response.post_discount_price;
-        }
-        this.units = 0
-        console.log(response);
-      },
-      (error) => {
-        console.error('Erro ao remover do carrinho', error);
-      }
-    )
-  }
-
-  addOne(product: any): void {
+  addOne(product: any, cart: any): void {
     this.store.dispatch(addOneToCart({payload: product}))
-  }
-
-  removeOne(): void {
-    if (this.units > 0){
-      this.units -= 1;
-    }
+    this.store.dispatch(setTotalOrderPrice({payload : cart}))
   }
 
   cartClear(): void {

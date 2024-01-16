@@ -252,6 +252,8 @@ class AddQtyToIngredient(APIView):
             None
         )
         if ingredient_data:
+            if product.units == 0:
+                product.units = 1
             updated_product_data = {
                 'id': str(product.id),
                 'units': product.units,
