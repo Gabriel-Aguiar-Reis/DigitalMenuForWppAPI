@@ -16,8 +16,8 @@ export interface Product {
     ingredients: Ingredient[];
     cost_price: string;
     percentualMargin: string;
-    price: string;
-    post_discount_price: any[];
+    price: number;
+    post_discount_price: any;
 }
 
 export interface Cart {
@@ -36,23 +36,36 @@ export const appInitialState: IAppState = {
     totalOrderPrice: 0
 }
 
-export const sendOrder = createAction('[Order] Send order.')
-export const sendOrderSuccessfully = createAction('[Order] [Success] Send order.')
-export const addOneToCart = createAction(
-  '[App] Add one to cart.', props<{ payload : Product }>())
-export const removeOneFromCart = createAction(
-  '[App] Remove one from cart.', props<{ payload : Product }>())
-export const getCart = createAction('[Cart] Get cart.')
-export const setCart = createAction(
-  '[Cart] Set cart.', props<{ payload : Cart }>())
-export const setCartSuccessfully = createAction('[Cart] [Success] Set cart.')
-export const setTotalOrderPrice = createAction(
-  '[Order] Set totalOrderPrice.', props<{ payload : Cart["products"] }>())
+export const sendOrder = createAction(
+  '[Order] Send order')
+export const sendOrderSuccessfully = createAction(
+  '[Order] [Success] Send order')
 
+export const setTotalOrderPrice = createAction(
+  '[Order] Set totalOrderPrice',props<{ payload: number }>()
+);
+
+export const addOneProductToCart = createAction(
+  '[App] Add one product to cart', props<{ payload : Product }>())
+export const removeOneProductFromCart = createAction(
+  '[App] Remove one product from cart', props<{ payload : Product }>())
+
+export const addOneIngredientToCart = createAction(
+  '[App] Add one ingredient to cart', props<{ payload: { product: Product, ingredient: Ingredient } }>())
+export const removeOneIngredientFromCart = createAction(
+  '[App] Remove one ingredient from cart', props<{ payload: { product: Product, ingredient: Ingredient } }>())
+
+export const initApp = createAction(
+  '[App] Initialize')
+
+export const setCart = createAction(
+  '[Cart] Set cart', props<{ payload : Cart }>())
+export const setCartSuccessfully = createAction(
+  '[Cart] [Success] Set cart')
 
 export const appReducer = createReducer(
     appInitialState,
-    on(addOneToCart, (state, { payload }) => {
+    on(addOneProductToCart, (state, { payload }) => {
         const existingProduct = state.cart.products.find(product => product.id === payload.id);
     
         if (existingProduct) {
@@ -84,7 +97,7 @@ export const appReducer = createReducer(
           };
         }
       }),
-    on(removeOneFromCart, (state, { payload }) => {
+    on(removeOneProductFromCart, (state, { payload }) => {
       const existingProduct = state.cart.products.find(product => product.id === payload.id);
     
       if (existingProduct) {
@@ -102,6 +115,96 @@ export const appReducer = createReducer(
         }
       }
       }),
+    on(addOneIngredientToCart, (state, { payload }) => {
+      const productId = payload.product.id;
+      const ingredientId = payload.ingredient.id;
+  
+      const existingProduct = state.cart.products.find(product => product.id === productId);
+  
+      if (existingProduct) {
+        const updatedProducts = state.cart.products.map(product => {
+          if (product.id === productId) {
+            const existingIngredient = product.ingredients.find(ingredient => ingredient.id === ingredientId);
+  
+            if (existingIngredient) {
+              const updatedIngredients = product.ingredients.map(ingredient =>
+                ingredient.id === ingredientId
+                  ? { ...ingredient, qty: ingredient.qty + 1 }
+                  : ingredient
+              );
+  
+              return { ...product, ingredients: updatedIngredients };
+            } else {
+              const newIngredient: Ingredient = {
+                id: ingredientId,
+                name: payload.ingredient.name,
+                qty: 1,
+                price: payload.ingredient.price
+              };
+  
+              return { ...product, ingredients: [...product.ingredients, newIngredient] };
+            }
+          } else {
+            return product;
+          }
+        });
+  
+        return { ...state, cart: { products: updatedProducts } };
+      } else {
+        const newProduct: Product = {
+          id: productId,
+          type: payload.product.type,
+          name: payload.product.name,
+          percentualMargin: payload.product.percentualMargin,
+          promotion: payload.product.promotion,
+          units: 1,
+          price: payload.product.price,
+          ingredients: [
+            {
+              id: ingredientId,
+              name: payload.ingredient.name,
+              qty: 1,
+              price: payload.ingredient.price
+            }
+          ],
+          cost_price: payload.product.cost_price,
+          post_discount_price: payload.product.post_discount_price
+        };
+  
+        return { ...state, cart: { products: [...state.cart.products, newProduct] } };
+      }
+    }),
+    on(removeOneIngredientFromCart, (state, { payload }) => {
+      const productId = payload.product.id;
+      const ingredientId = payload.ingredient.id;
+  
+      const existingProduct = state.cart.products.find(product => product.id === productId);
+  
+      if (existingProduct) {
+        const updatedProducts = state.cart.products.map(product => {
+          if (product.id === productId) {
+            const existingIngredient = product.ingredients.find(ingredient => ingredient.id === ingredientId);
+  
+            if (existingIngredient) {
+              const updatedIngredients = product.ingredients.map(ingredient =>
+                ingredient.id === ingredientId
+                  ? { ...ingredient, qty: ingredient.qty - 1 }
+                  : ingredient
+              ).filter(ingredient => ingredient.qty > 0);
+  
+              return { ...product, ingredients: updatedIngredients };
+            } else {
+              return product;
+            }
+          } else {
+            return product;
+          }
+        })
+        return { ...state, cart: { products: updatedProducts } };
+      } else {
+        return state;
+      }
+    }),
     on(setCart, (state, { payload }) => {
         state = {
             ...state,
@@ -110,23 +213,6 @@ export const appReducer = createReducer(
         return state
     }),
     on(setTotalOrderPrice, (state, { payload }) => {
-      let totalOrderPrice = 0
-      console.log(payload)
-      for (let product of payload) {
-        if (product.units > 0) {
-          totalOrderPrice += parseFloat(product.cost_price) * product.units
-          for (let ingredient of product.ingredients){
-            if (ingredient.qty > 0) {
-              totalOrderPrice += (ingredient.price * ingredient.qty)
-            }
-          }
-          totalOrderPrice *= parseFloat(product.percentualMargin)
-        }
-      }
-      state = {
-        ...state,
-        totalOrderPrice: totalOrderPrice
-      }
-      return state
+      return { ...state, totalOrderPrice: payload };
     })
 )

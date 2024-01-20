@@ -16,4 +16,9 @@
 .product_price__info {
   display: flex;
   flex-direction: row;
+}
+
+.product_ingredient__container {
+  display: flex;
+  flex-direction: column;
 }/*# sourceMappingURL=shopping-cart.component.css.map */

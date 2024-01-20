@@ -3,8 +3,9 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { NumberFormatPipe } from '../../pipes/number-format.pipe';
 import { Store } from '@ngrx/store';
-import { addOneToCart, Cart, IAppState, setTotalOrderPrice } from '../../store/app.state';
+import { addOneProductToCart, Cart, IAppState } from '../../store/app.state';
 import { map } from 'rxjs';
+import { CartEffectService } from '../../services/cart-effect.service';
 
 @Component({
   selector: 'app-product-card',
@@ -15,6 +16,12 @@ import { map } from 'rxjs';
   styleUrl: './product-card.component.css'
 })
 export class ProductCardComponent implements OnInit{
+  constructor (
+    private productService: ProductService,
+    private cartService: CartService,
+    private store: Store<{ app: IAppState, cart: Cart }>,
+    private cartEffectService: CartEffectService
+    ) {}
   @Input()
   productId: string = ''
   productPrice: number = 0
@@ -26,13 +33,9 @@ export class ProductCardComponent implements OnInit{
   totalUnitsInCart: number = 0
   totalPriceByUnit: number = 0
   
-  constructor (
-    private productService: ProductService,
-    private cartService: CartService,
-    private store: Store<{ app: IAppState, cart: Cart }>
-    ) {}
-
   cart$ = this.store.select('app').pipe(map(app => app.cart));
+  products$ = this.store.select('app').pipe(map(app => app.cart.products));
+
   ngOnInit(): void {
     this.productService.getProduct(this.productId).subscribe(
       (response) => {
@@ -44,9 +47,9 @@ export class ProductCardComponent implements OnInit{
     )
   }
 
-  addOne(product: any, cart: any): void {
-    this.store.dispatch(addOneToCart({payload: product}))
-    this.store.dispatch(setTotalOrderPrice({payload : cart}))
+  addOne(product: any, products: any): void {
+    this.store.dispatch(addOneProductToCart({payload: product}))
+    this.cartEffectService.calculateTotalOrderPrice(products)
   }
 
   cartClear(): void {

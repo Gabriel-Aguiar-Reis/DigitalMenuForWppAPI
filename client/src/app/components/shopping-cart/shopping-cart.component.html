@@ -12,15 +12,21 @@
                     <div class="product__texts">
                         <span>{{product.name}}</span>
                         <div class="product_price__info">
-                            <button type="button" (click)="removeOneFromCart(product)">-</button>
+                            <button type="button" (click)="removeOneProductFromCart(product, products$)">-</button>
                             <span>{{product.units}}</span>
-                            <button type="button" (click)="addOneToCart(product, products$)">+</button>
-                            <span>R$ {{(Number(product.price) * product.units) | numberFormat}}</span>
-                            <div class="product_ingredient_price__info" *ngFor="let ingredient of product.ingredients">
-                                <button type="button">-</button>
-                                <span>{{ingredient.qty}}</span>
-                                <button type="button">+</button>
-                                <span>R$ {{(ingredient.price * Number(product.percentualMargin)) | numberFormat}}</span>
+                            <button type="button" (click)="addOneProductToCart(product, products$)">+</button>
+                            <span *ngIf="product.post_discount_price.length === 2">R$ {{(product.post_discount_price[product.post_discount_price.length - 1]) | numberFormat}}</span>
+                            <span *ngIf="!isArray(product.post_discount_price)">R$ {{(product.post_discount_price) | numberFormat}}</span>
+                            <div class="product_ingredient__container" *ngFor="let ingredient of product.ingredients">
+                                <div class="product_ingredient__info">
+                                    <span>{{ingredient.name}}</span>
+                                </div>
+                                <div class="product_ingredient_price__info">
+                                    <button type="button" (click)="removeOneIngredientFromCart(product, ingredient, products$)">-</button>
+                                    <span>{{ingredient.qty}}</span>
+                                    <button type="button" (click)="addOneIngredientToCart(product, ingredient, products$)">+</button>
+                                    <span>R$ {{(ingredient.price * Number(product.percentualMargin)) | numberFormat}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
