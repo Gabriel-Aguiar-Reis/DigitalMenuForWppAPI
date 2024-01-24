@@ -1,27 +1,44 @@
-from typing import Optional, List
+from typing import Optional, Union
 
 from .models import Product, Type
 
 
 class Util:
     @staticmethod
-    def __is_valid(
-        any_value: Optional[int] | Optional[float],
-    ) -> (int | float):
-        if any_value == None:
+    def is_valid(any_value: Optional[Union[int, float, str]]) -> Union[int, float]:
+        if any_value is None:
             any_value = 0
+        elif isinstance(any_value, str):
+            any_value = float(any_value)
         return any_value
 
+
+    @staticmethod
+    def calculate_ingredient_price(
+        cost_price: Optional[float] = None,
+        percentual_margin: Optional[float] = None,
+    ) -> float:
+        
+        parameters = [
+            cost_price,
+            percentual_margin
+        ]
+        valid_params = [Util.is_valid(param) for param in parameters]
+        
+        if valid_params[1]:
+            return valid_params[0] * (1 + (valid_params[1]/100))
+        return valid_params[0]
+    
     @staticmethod
     def calculate_value_after_discount(
-        price: Optional[float] = None,
+        price: Optional[float | str] = None,
         units: Optional[int] = None,
-        discount_amount: Optional[int] = None,
-        percentual_discount: Optional[float] = None,
-        unit_discount: Optional[int] = None,
-        amount_for_discount: Optional[float] = None,
-        unit_for_discount: Optional[int] = None,
-    ) -> float:
+        discount_amount: Optional[int | str] = None,
+        percentual_discount: Optional[float | str] = None,
+        unit_discount: Optional[int | str] = None,
+        amount_for_discount: Optional[float | str] = None,
+        unit_for_discount: Optional[int | str] = None,
+    ) -> any:
 
         parameters = [
             price,
@@ -33,19 +50,12 @@ class Util:
             unit_for_discount,
         ]
 
-        valid_params = [Util.__is_valid(param) for param in parameters]
+        valid_params = [Util.is_valid(param) for param in parameters]
 
-        [
-            price,
-            units,
-            discount_amount,
-            percentual_discount,
-            unit_discount,
-            amount_for_discount,
-            unit_for_discount,
-         ] = valid_params
+        
+        price_valid, units_valid, discount_amount_valid, percentual_discount_valid, unit_discount_valid, amount_for_discount_valid, unit_for_discount_valid = valid_params
 
-        value: Optional[int | float] = price * units
+        value: Optional[float] = float(price_valid * units_valid)
         if not value:
             result = 'Invalid: There is no value reported.'
         elif (
@@ -56,34 +66,34 @@ class Util:
         else:
             discount_conditions = [
                 (
-                    discount_amount,
-                    amount_for_discount,
-                    value >= amount_for_discount,
+                    discount_amount_valid,
+                    amount_for_discount_valid,
+                    value >= amount_for_discount_valid,
                 ),
                 (
-                    discount_amount,
-                    unit_for_discount,
-                    value >= (unit_for_discount * price),
+                    discount_amount_valid,
+                    unit_for_discount_valid,
+                    value >= (unit_for_discount_valid * price_valid),
                 ),
                 (
-                    percentual_discount,
-                    amount_for_discount,
-                    value >= amount_for_discount,
+                    percentual_discount_valid,
+                    amount_for_discount_valid,
+                    value >= amount_for_discount_valid,
                 ),
                 (
-                    percentual_discount,
-                    unit_for_discount,
-                    value >= (unit_for_discount * price),
+                    percentual_discount_valid,
+                    unit_for_discount_valid,
+                    value >= (unit_for_discount_valid * price_valid),
                 ),
                 (
-                    unit_discount,
-                    amount_for_discount,
-                    value >= amount_for_discount,
+                    unit_discount_valid,
+                    amount_for_discount_valid,
+                    value >= amount_for_discount_valid,
                 ),
                 (
-                    unit_discount,
-                    unit_for_discount,
-                    value >= (unit_for_discount * price),
+                    unit_discount_valid,
+                    unit_for_discount_valid,
+                    value >= (unit_for_discount_valid * price_valid),
                 ),
             ]
 
@@ -94,12 +104,12 @@ class Util:
                 condition_met,
             ) in discount_conditions:
                 if discount_type and discount_validation and condition_met:
-                    if discount_type == discount_amount:
-                        result = value - discount_amount
-                    elif discount_type == percentual_discount:
-                        result = value - (value * percentual_discount)
-                    elif discount_type == unit_discount:
-                        result = value - (unit_discount * price)
+                    if discount_type == discount_amount_valid:
+                        result = value - discount_amount_valid
+                    elif discount_type == percentual_discount_valid:
+                        result = value - (value * (percentual_discount_valid/100))
+                    elif discount_type == unit_discount_valid:
+                        result = value - (unit_discount_valid * price_valid)
                     break
 
         if isinstance(result, str):
@@ -112,7 +122,7 @@ class Util:
         cost_price: Optional[float] = None,
         product_percentual_margin: Optional[float] = None,
         type_percentual_margin: Optional[float] = None,
-        ingredients: list() = None
+        ingredients: any = None
     ) -> float:
 
         parameters = [
@@ -121,38 +131,38 @@ class Util:
             type_percentual_margin,
         ]
 
-        valid_params = [Util.__is_valid(param) for param in parameters]
+        valid_params = [Util.is_valid(param) for param in parameters]
 
         (
-            cost_price,
-            product_percentual_margin,
-            type_percentual_margin,
+            cost_price_valid,
+            product_percentual_margin_valid,
+            type_percentual_margin_valid,
         ) = valid_params
 
-        if product_percentual_margin != 0 and type_percentual_margin != 0:
-            for ingredient in ingredients:
-                if ingredient['qty'] > 0:
-                    cost_price += ingredient['qty'] * ingredient['price']
+        if product_percentual_margin_valid != 0 and type_percentual_margin_valid != 0:
+            for ingredient in ingredients.all():
+                if ingredient.qty > 0:
+                    cost_price_valid += ingredient.qty * ingredient.price
             result = (
-                cost_price
-                + (cost_price * product_percentual_margin)
-                + (cost_price * type_percentual_margin)
+                cost_price_valid
+                + (cost_price_valid * (product_percentual_margin_valid/100))
+                + (cost_price_valid * (type_percentual_margin_valid/100))
             )
-        elif product_percentual_margin != 0 and type_percentual_margin == 0:
-            for ingredient in ingredients:
-                if ingredient['qty'] > 0:
-                    cost_price += ingredient['qty'] * ingredient['price']
-            result = cost_price + (cost_price * product_percentual_margin)
-        elif type_percentual_margin != 0 and product_percentual_margin == 0:
-            for ingredient in ingredients:
-                if ingredient['qty'] > 0:
-                    cost_price += ingredient['qty'] * ingredient['price']
-            result = cost_price + (cost_price * type_percentual_margin)
-        elif product_percentual_margin == 0 and type_percentual_margin:
-            for ingredient in ingredients:
-                if ingredient['qty'] > 0:
-                    cost_price += ingredient['qty'] * ingredient['price']
-            result = cost_price
+        elif product_percentual_margin_valid != 0 and type_percentual_margin_valid == 0:
+            for ingredient in ingredients.all():
+                if ingredient.qty > 0:
+                    cost_price_valid += ingredient.qty * ingredient.price
+            result = cost_price_valid + (cost_price_valid * (product_percentual_margin_valid/100))
+        elif type_percentual_margin_valid != 0 and product_percentual_margin_valid == 0:
+            for ingredient in ingredients.all():
+                if ingredient.qty > 0:
+                    cost_price_valid += ingredient.qty * ingredient.price
+            result = cost_price_valid + (cost_price_valid * (type_percentual_margin_valid/100))
+        elif product_percentual_margin_valid == 0 and type_percentual_margin_valid == 0:
+            for ingredient in ingredients.all():
+                if ingredient.qty > 0:
+                    cost_price_valid += ingredient.qty * ingredient.price
+            result = cost_price_valid
         else:
             result = 0
         return result
@@ -164,7 +174,9 @@ class Util:
         object = Product.objects.get(id=product_id)
         type = object.type
         type_data = Type.objects.get(name=type)
-        return type_data.percentual_margin
+        if type_data is not None:
+            return type_data.percentual_margin
+        return None
     
     @staticmethod
     def override_none_product_promo(obj):

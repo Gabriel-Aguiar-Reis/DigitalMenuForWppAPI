@@ -15,7 +15,7 @@ export interface Product {
     units: number;
     ingredients: Ingredient[];
     cost_price: string;
-    percentualMargin: string;
+    percentual_margin: string;
     price: number;
     post_discount_price: any;
 }
@@ -41,9 +41,6 @@ export const sendOrder = createAction(
 export const sendOrderSuccessfully = createAction(
   '[Order] [Success] Send order')
 
-export const setTotalOrderPrice = createAction(
-  '[Order] Set totalOrderPrice',props<{ payload: number }>()
-);
 
 export const addOneProductToCart = createAction(
   '[App] Add one product to cart', props<{ payload : Product }>())
@@ -62,6 +59,12 @@ export const setCart = createAction(
   '[Cart] Set cart', props<{ payload : Cart }>())
 export const setCartSuccessfully = createAction(
   '[Cart] [Success] Set cart')
+
+export const setTotalOrderPrice = createAction(
+  '[Order] Set totalOrderPrice', props<{ payload : number}>()
+)
+export const setTotalOrderPriceSuccessfully = createAction(
+  '[Order] [Successfully] Set totalOrderPrice')
 
 export const appReducer = createReducer(
     appInitialState,
@@ -82,7 +85,7 @@ export const appReducer = createReducer(
             id: payload.id,
             type: payload.type,  
             name: payload.name,
-            percentualMargin: payload.percentualMargin,  
+            percentual_margin: payload.percentual_margin,  
             promotion: payload.promotion,  
             units: 1,
             price: payload.price,
@@ -155,7 +158,7 @@ export const appReducer = createReducer(
           id: productId,
           type: payload.product.type,
           name: payload.product.name,
-          percentualMargin: payload.product.percentualMargin,
+          percentual_margin: payload.product.percentual_margin,
           promotion: payload.product.promotion,
           units: 1,
           price: payload.product.price,
@@ -216,3 +219,4 @@ export const appReducer = createReducer(
       return { ...state, totalOrderPrice: payload };
     })
 )
+

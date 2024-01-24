@@ -4,15 +4,15 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 from .views import (
-    AddIngredient,
     AddQtyToIngredient,
     AddToCart,
+    CalculateTotalOrderPrice,
     CampaignDetail,
     CampaignList,
     ClearCart,
-    GetIngredient,
     HealthCheck,
-    ListIngredients,
+    IngredientDetail,
+    IngredientList,
     PhotoDetail,
     PhotoList,
     ProductDetail,
@@ -22,7 +22,6 @@ from .views import (
     TypeDetail,
     TypeList,
     ViewCart,
-    RemoveIngredient,
 )
 
 schema_view = get_schema_view(
@@ -39,35 +38,105 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('healthcheck/', HealthCheck.as_view(), name='HealthCheck'),
     path(
-        'campaigns/<uuid:pk>/', CampaignDetail.as_view(), name='CampaignDetail'
+        'healthcheck/',
+        HealthCheck.as_view(),
+        name='HealthCheck'
     ),
-    path('campaigns/', CampaignList.as_view(), name='CampaignList'),
-    path('cart/clear/', ClearCart.as_view(), name='ClearCart'),
-    path('cart/view/', ViewCart.as_view(), name='ViewCart'),
-    path('photos/<uuid:pk>/', PhotoDetail.as_view(), name='PhotoDetail'),
-    path('photos/', PhotoList.as_view(), name='PhotoList'),
-    path('products/<uuid:pk>/', ProductDetail.as_view(), name='ProductDetail'),
-    path('products/<uuid:pk>/ingredients/', ListIngredients.as_view(), name='ListIngredients'),
-    path('products/<uuid:pk>/add_ingredient/<str:name>/<str:price>/', AddIngredient.as_view(), name='AddIngredient'),
-    path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/add_qty/<int:qty_added>/', AddQtyToIngredient.as_view(), name='AddQtyToIngredient'),
-    path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/remove_qty/<int:qty_removed>/', RemoveQtyFromIngredient.as_view(), name='RemoveQtyFromIngredient'),
-    path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/remove/', RemoveIngredient.as_view(), name='RemoveIngredient'),
-    path('products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/get/', GetIngredient.as_view(), name='GetIngredient'),
+    
     path(
-        'products/<uuid:pk>/add/<int:units>/',
+        'campaigns/<uuid:pk>/',
+        CampaignDetail.as_view(),
+        name='CampaignDetail'
+    ),
+    path(
+        'campaigns/',
+        CampaignList.as_view(),
+        name='CampaignList'
+    ),
+    
+    path(
+        'cart/clear/',
+        ClearCart.as_view(), 
+        name='ClearCart'
+    ),
+    path(
+        'cart/calculate_total_order_price/',
+        CalculateTotalOrderPrice.as_view(),
+        name='CalculateTotalOrderPrice'
+    ),
+    path(
+        'cart/view/',
+        ViewCart.as_view(),
+        name='ViewCart'
+    ),
+    
+    path(
+        'cart/products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/add_qty/<int:qty_added>/',
+        AddQtyToIngredient.as_view(),
+        name='AddQtyToIngredient'
+    ),
+    path(
+        'cart/products/<uuid:pk>/ingredients/<uuid:ingredient_pk>/remove_qty/<int:qty_removed>/',
+        RemoveQtyFromIngredient.as_view(),
+        name='RemoveQtyFromIngredient'
+    ),
+    
+    path(
+        'cart/products/<uuid:pk>/add/<int:units>/',
         AddToCart.as_view(),
         name='AddToCart',
     ),
     path(
-        'products/<uuid:pk>/remove/<int:units>/',
+        'cart/products/<uuid:pk>/remove/<int:units>/',
         RemoveFromCart.as_view(),
         name='RemoveFromCart',
     ),
-    path('products/', ProductList.as_view(), name='ProductList'),
-    path('types/<uuid:pk>/', TypeDetail.as_view(), name='TypeDetail'),
-    path('types/', TypeList.as_view(), name='TypeList'),
+    
+    path(
+        'ingredients/<uuid:pk>',
+        IngredientDetail.as_view(),
+        name='IngredientDetail'
+    ),
+    path(
+        'ingredients/',
+        IngredientList.as_view(),
+        name='IngredientList'
+    ),
+    
+    path(
+        'photos/<uuid:pk>/',
+        PhotoDetail.as_view(),
+        name='PhotoDetail'
+    ),
+    path(
+        'photos/',
+        PhotoList.as_view(),
+        name='PhotoList'
+    ),
+    
+    path(
+        'products/<uuid:pk>/',
+        ProductDetail.as_view(),
+        name='ProductDetail'
+    ),
+    path(
+        'products/',
+        ProductList.as_view(),
+        name='ProductList'
+    ),
+    
+    
+    path(
+        'types/<uuid:pk>/',
+        TypeDetail.as_view(),
+        name='TypeDetail'
+    ),
+    path(
+        'types/',
+        TypeList.as_view(),
+        name='TypeList'
+    ),
 ]
 
 urlpatterns += [

@@ -9,13 +9,13 @@ import {
   setCartSuccessfully,
   sendOrder,
   addOneProductToCart,
-  Product,
-  setTotalOrderPrice,
   removeOneProductFromCart,
   addOneIngredientToCart,
   removeOneIngredientFromCart,
+  setTotalOrderPrice,
+  setTotalOrderPriceSuccessfully,
 } from '../store/app.state';
-import { Observable, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import { map, of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ProductService } from './product.service';
 
@@ -30,12 +30,11 @@ export class CartEffectService {
     private actions$: Actions,
     private http: HttpClient,
     private store: Store<{ app: IAppState, cart: Cart }>,
-    private productService: ProductService
+    private productService: ProductService,
     ) {}
   
   private apiUrl = 'http://localhost:8000/api'
    
-
   initCart = createEffect(
     () => this.actions$.pipe(
       ofType('[App] Initialize'), 
@@ -48,7 +47,7 @@ export class CartEffectService {
     () => this.actions$.pipe(
       ofType(addOneProductToCart),
       withLatestFrom(this.store.select('app').pipe(map(app => app.cart))),
-      switchMap(([action, cart]) => {
+      switchMap(([action]) => {
         const productId = action.payload.id;
         const unitsToAdd = 1;
         return this.productService.addToCart(productId, unitsToAdd).pipe(
@@ -56,7 +55,6 @@ export class CartEffectService {
             return this.http.get<any>(`${this.apiUrl}/cart/view/`, { withCredentials: true }).pipe(
               map(newCart => {
                 this.store.dispatch(setCart({ payload: newCart }));
-                this.calculateTotalOrderPrice(newCart.products);
                 return setCartSuccessfully();
               })
             );
@@ -69,7 +67,7 @@ export class CartEffectService {
     () => this.actions$.pipe(
       ofType(removeOneProductFromCart),
       withLatestFrom(this.store.select('app').pipe(map(app => app.cart))),
-      switchMap(([action, cart]) => {
+      switchMap(([action]) => {
         const productId = action.payload.id;
         const unitsToRemove = 1;
         return this.productService.removeFromCart(productId, unitsToRemove).pipe(
@@ -77,7 +75,6 @@ export class CartEffectService {
             return this.http.get<any>(`${this.apiUrl}/cart/view/`, { withCredentials: true }).pipe(
               map(newCart => {
                 this.store.dispatch(setCart({ payload: newCart }));
-                this.calculateTotalOrderPrice(newCart.products);
                 return setCartSuccessfully();
               })
             );
@@ -90,7 +87,7 @@ export class CartEffectService {
     () => this.actions$.pipe(
       ofType(addOneIngredientToCart),
       withLatestFrom(this.store.select('app').pipe(map(app => app.cart))),
-      switchMap(([action, cart]) => {
+      switchMap(([action]) => {
         const productId = action.payload.product.id;
         const ingredientId = action.payload.ingredient.id
         const qtyToAdd = 1;
@@ -99,7 +96,6 @@ export class CartEffectService {
             return this.http.get<any>(`${this.apiUrl}/cart/view/`, { withCredentials: true }).pipe(
               map(newCart => {
                 this.store.dispatch(setCart({ payload: newCart }));
-                this.calculateTotalOrderPrice(newCart.products);
                 return setCartSuccessfully();
               })
             )
@@ -113,7 +109,7 @@ export class CartEffectService {
     () => this.actions$.pipe(
     ofType(removeOneIngredientFromCart),
     withLatestFrom(this.store.select('app').pipe(map(app => app.cart))),
-    switchMap(([action, cart]) => {
+    switchMap(([action]) => {
       const productId = action.payload.product.id;
       const ingredientId = action.payload.ingredient.id
       const qtyToRemove = 1;
@@ -122,7 +118,6 @@ export class CartEffectService {
           return this.http.get<any>(`${this.apiUrl}/cart/view/`, { withCredentials: true }).pipe(
             map(newCart => {
               this.store.dispatch(setCart({ payload: newCart }));
-              this.calculateTotalOrderPrice(newCart.products);
               return setCartSuccessfully();
             })
           )
@@ -134,12 +129,12 @@ export class CartEffectService {
   sendOrder = createEffect(
     () => this.actions$.pipe(
       ofType(sendOrder),
-      withLatestFrom(this.store.select('app').pipe(map(app => app.cart))),
-      switchMap(([ action, cart ]) => {
+      withLatestFrom(this.store.select('app').pipe(map(app => app))),
+      switchMap(([, app ]) => {
         const orderUrl = "https://api.whatsapp.com/send?phone=5512981696818&text=";
         let order = `*NOVO PEDIDO FRESQUINHO*\n`;
-        const totalOrderPrice = this.calculateTotalOrderPrice(cart.products);
-        for (let product of cart.products) {
+        let totalOrderPrice =app.totalOrderPrice
+        for (let product of app.cart.products) {
           if (product.units > 0) {
             order += `${product.units} x ${product.name}\n`;
             for (let ingredient of product.ingredients){
@@ -149,7 +144,7 @@ export class CartEffectService {
             }
           }
         }
-        order += `*Valor Total:* R$ ${totalOrderPrice}`;
+        order += `*Valor Total:* R$ ${totalOrderPrice.toFixed(2)}`;
   
         const apiEndpoint = orderUrl + encodeURIComponent(order);
         return window.location.href = apiEndpoint
@@ -158,28 +153,24 @@ export class CartEffectService {
       map(() => sendOrderSuccessfully())
     )
   )
-  calculateTotalOrderPrice(products: Product[]): Observable<number> {
-    return this.store.select('app').pipe(
-      map(app => {
-        let totalOrderPrice = app.totalOrderPrice;
-  
-        for (let product of products) {
-          if (product.units > 0) {
-            totalOrderPrice += parseFloat(product.cost_price) * product.units;
-  
-            for (let ingredient of product.ingredients) {
-              if (ingredient.qty > 0) {
-                totalOrderPrice += ingredient.price * ingredient.qty;
-              }
-            }
-  
-            totalOrderPrice *= parseFloat(product.percentualMargin);
-          }
-        }
-        this.store.dispatch(setTotalOrderPrice({ payload: totalOrderPrice }));
-        return totalOrderPrice;
+  getTotalOrderPrice = createEffect(
+    () => this.actions$.pipe(
+      ofType(
+        addOneProductToCart,
+        removeOneProductFromCart,
+        addOneIngredientToCart,
+        removeOneIngredientFromCart,
+        setCart
+      ),
+      withLatestFrom(this.store.select('app').pipe(map(app => app.totalOrderPrice))),
+      switchMap(([action]) => {
+        return this.http.get<any>(`${this.apiUrl}/cart/calculate_total_order_price/`, { withCredentials: true }).pipe(
+          map(totalOrderPrice => {
+            this.store.dispatch(setTotalOrderPrice({ payload : totalOrderPrice.total_order_price }))
+            return setTotalOrderPriceSuccessfully()
+          })
+        )
       })
-    );
-  }
+    )
+  )
 }
-

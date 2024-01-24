@@ -29,6 +29,13 @@
   flex-direction: row;
 }
 
+.cart__container {
+  position: fixed;
+  top: 80px;
+  right: 150px;
+  z-index: 2;
+}
+
 .type-card__container {
   margin: 2rem 0 0 0.5rem;
 }

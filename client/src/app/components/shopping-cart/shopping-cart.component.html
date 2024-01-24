@@ -12,9 +12,9 @@
                     <div class="product__texts">
                         <span>{{product.name}}</span>
                         <div class="product_price__info">
-                            <button type="button" (click)="removeOneProductFromCart(product, products$)">-</button>
+                            <button type="button" (click)="removeOneProductFromCart(product)">-</button>
                             <span>{{product.units}}</span>
-                            <button type="button" (click)="addOneProductToCart(product, products$)">+</button>
+                            <button type="button" (click)="addOneProductToCart(product)">+</button>
                             <span *ngIf="product.post_discount_price.length === 2">R$ {{(product.post_discount_price[product.post_discount_price.length - 1]) | numberFormat}}</span>
                             <span *ngIf="!isArray(product.post_discount_price)">R$ {{(product.post_discount_price) | numberFormat}}</span>
                             <div class="product_ingredient__container" *ngFor="let ingredient of product.ingredients">
@@ -22,10 +22,10 @@
                                     <span>{{ingredient.name}}</span>
                                 </div>
                                 <div class="product_ingredient_price__info">
-                                    <button type="button" (click)="removeOneIngredientFromCart(product, ingredient, products$)">-</button>
+                                    <button type="button" (click)="removeOneIngredientFromCart(product, ingredient)">-</button>
                                     <span>{{ingredient.qty}}</span>
-                                    <button type="button" (click)="addOneIngredientToCart(product, ingredient, products$)">+</button>
-                                    <span>R$ {{(ingredient.price * Number(product.percentualMargin)) | numberFormat}}</span>
+                                    <button type="button" (click)="addOneIngredientToCart(product, ingredient)">+</button>
+                                    <span>R$ {{ingredient.price | numberFormat}}</span>
                                 </div>
                             </div>
                         </div>
