@@ -1,4 +1,5 @@
 import ast
+from uuid import uuid4
 from django.forms import model_to_dict
 from rest_framework import generics, status
 from rest_framework.generics import get_object_or_404
@@ -76,7 +77,7 @@ class CalculateTotalOrderPrice(APIView):
 class AddToCart(APIView):
     def patch(self, request, pk, units, *args, **kwargs):
         product_uuid = pk
-
+        
         session_key = request.session.session_key
         if not session_key:
             request.session.create()
@@ -86,14 +87,15 @@ class AddToCart(APIView):
 
         product = get_object_or_404(Product, id=product_uuid)
         
-        
         product_serializer = ProductSerializer(
             product, context={'request': request}
         )
-        
-        print(product_serializer.data['ingredients'])
-
+            
         updated = False
+        
+        order_uuid = None
+        if product_serializer.data['ingredients']:
+            order_uuid = str(uuid4())
         
         for product_data in products:
             if product_data['id'] == str(product_uuid):
@@ -108,15 +110,35 @@ class AddToCart(APIView):
             product.ingredients
         ))
         
-        post_discount_price = str(Util.calculate_value_after_discount(
-            price,
-            units,
-            product.promotion.discount_amount if product.promotion is not None and product.promotion.discount_amount is not None else 0,
-            product.promotion.percentual_discount if product.promotion is not None and product.promotion.percentual_discount is not None else 0,
-            product.promotion.unit_discount if product.promotion is not None and product.promotion.unit_discount is not None else 0,
-            product.promotion.amount_for_discount if product.promotion is not None and product.promotion.amount_for_discount is not None else 0,
-            product.promotion.unit_for_discount if product.promotion is not None and product.promotion.unit_for_discount is not None else 0,
-        ))
+        promotion = product.promotion if product.promotion is not None else {}
+
+        discount_amount = promotion.get('discount_amount', 0)
+        percentual_discount = promotion.get('percentual_discount', 0)
+        unit_discount = promotion.get('unit_discount', 0)
+        amount_for_discount = promotion.get('amount_for_discount', 0)
+        unit_for_discount = promotion.get('unit_for_discount', 0)
+
+        post_discount_price = str(
+            Util.calculate_value_after_discount(
+                price,
+                units,
+                discount_amount,
+                percentual_discount,
+                unit_discount,
+                amount_for_discount,
+                unit_for_discount
+            )
+        )
+        
+        # post_discount_price = str(Util.calculate_value_after_discount(
+        #     price,
+        #     units,
+        #     product.promotion.discount_amount if product.promotion is not None and product.promotion.discount_amount is not None else 0,
+        #     product.promotion.percentual_discount if product.promotion is not None and product.promotion.percentual_discount is not None else 0,
+        #     product.promotion.unit_discount if product.promotion is not None and product.promotion.unit_discount is not None else 0,
+        #     product.promotion.amount_for_discount if product.promotion is not None and product.promotion.amount_for_discount is not None else 0,
+        #     product.promotion.unit_for_discount if product.promotion is not None and product.promotion.unit_for_discount is not None else 0,
+        # ))
         
         type_data = model_to_dict(product.type)
         campaign_data = ""
@@ -127,13 +149,14 @@ class AddToCart(APIView):
         if not updated:
             product_data = {
                 'id': str(product_uuid),
+                'order_uuid': order_uuid,
                 'units': units,
                 'name': product.name,
                 'percentual_margin': str(product.percentual_margin),
                 'type': type_data,
                 'promotion': campaign_data,
-                'cost_price': str(product.cost_price),
                 'ingredients': product_serializer.data['ingredients'],
+                'cost_price': str(product.cost_price),
                 'price': price,
                 'post_discount_price': post_discount_price,
             }
@@ -143,6 +166,112 @@ class AddToCart(APIView):
 
         updated_product_data = {
             'id': str(product_uuid),
+            'order_uuid': order_uuid,
+            'units': product_data['units'],
+            'name': product.name,
+            'percentual_margin': str(product.percentual_margin),
+            'type': type_data,
+            'promotion': campaign_data,
+            'ingredients': product_serializer.data['ingredients'],
+            'cost_price': str(product.cost_price),
+            'price': price,
+            'post_discount_price': post_discount_price,
+        }
+
+        return Response(updated_product_data, status=status.HTTP_200_OK)
+    
+class AddUniqueToCart(APIView):
+    def patch(self, request, pk, units, order_p_id, *args, **kwargs):
+        product_uuid = pk
+        
+        unique_product_id = order_p_id
+
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+
+        cart = request.session.get('cart', {'products': []})
+        products = cart.get('products', [])
+
+        product = get_object_or_404(Product, id=product_uuid)
+        
+        product_serializer = ProductSerializer(
+            product, context={'request': request}
+        )
+            
+        updated = False
+        
+        for product_data in products:
+            if product_data['id'] == str(product_uuid):
+                if product_data['order_uuid'] == unique_product_id:
+                    product_data['units'] += units
+                    updated = True
+                break
+        
+        price = str(Util.calculate_product_price(
+            product.cost_price,
+            product.percentual_margin,
+            product.type.percentual_margin,
+            product.ingredients
+        ))
+        
+        promotion = product.promotion if product.promotion is not None else {}
+
+        discount_amount = promotion.get('discount_amount', 0)
+        percentual_discount = promotion.get('percentual_discount', 0)
+        unit_discount = promotion.get('unit_discount', 0)
+        amount_for_discount = promotion.get('amount_for_discount', 0)
+        unit_for_discount = promotion.get('unit_for_discount', 0)
+
+        post_discount_price = str(
+            Util.calculate_value_after_discount(
+                price,
+                units,
+                discount_amount,
+                percentual_discount,
+                unit_discount,
+                amount_for_discount,
+                unit_for_discount
+            )
+        )
+        
+        # post_discount_price = str(Util.calculate_value_after_discount(
+        #     price,
+        #     units,
+        #     product.promotion.discount_amount if product.promotion is not None and product.promotion.discount_amount is not None else 0,
+        #     product.promotion.percentual_discount if product.promotion is not None and product.promotion.percentual_discount is not None else 0,
+        #     product.promotion.unit_discount if product.promotion is not None and product.promotion.unit_discount is not None else 0,
+        #     product.promotion.amount_for_discount if product.promotion is not None and product.promotion.amount_for_discount is not None else 0,
+        #     product.promotion.unit_for_discount if product.promotion is not None and product.promotion.unit_for_discount is not None else 0,
+        # ))
+        
+        type_data = model_to_dict(product.type)
+        campaign_data = ""
+        if product.promotion is not None:
+            campaign_data = model_to_dict(product.promotion)
+        
+        
+        if not updated:
+            product_data = {
+                'id': str(product_uuid),
+                'order_uuid': unique_product_id,
+                'units': units,
+                'name': product.name,
+                'percentual_margin': str(product.percentual_margin),
+                'type': type_data,
+                'promotion': campaign_data,
+                'ingredients': product_serializer.data['ingredients'],
+                'cost_price': str(product.cost_price),
+                'price': price,
+                'post_discount_price': post_discount_price,
+            }
+            products.append(product_data)
+
+        request.session['cart'] = cart
+
+        updated_product_data = {
+            'id': str(product_uuid),
+            'order_uuid': unique_product_id,
             'units': product_data['units'],
             'name': product.name,
             'percentual_margin': str(product.percentual_margin),

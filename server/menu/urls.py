@@ -6,6 +6,7 @@ from rest_framework import permissions
 from .views import (
     AddQtyToIngredient,
     AddToCart,
+    AddUniqueToCart,
     CalculateTotalOrderPrice,
     CampaignDetail,
     CampaignList,
@@ -91,6 +92,12 @@ urlpatterns = [
         'cart/products/<uuid:pk>/remove/<int:units>/',
         RemoveFromCart.as_view(),
         name='RemoveFromCart',
+    ),
+    
+    path(
+        'cart/products/<uuid:pk>/add/<int:units>/<uuid:order_p_id>',
+        AddUniqueToCart.as_view(),
+        name='AddUniqueToCart',
     ),
     
     path(
